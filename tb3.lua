@@ -30,7 +30,6 @@ LocalPlayerSection:Button({
         Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
     end
 })
-})
 
 -- Local Character Modifications
 local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
@@ -40,6 +39,13 @@ LocalCharacterSection:Button({
     Tooltip = "Modify WalkSpeed, JumpPower, Click Teleport, No-Clip",
     Callback = function()
         Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
+        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
+        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
+        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
+
+        Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
+    end
+})
         Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
         Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
         Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
