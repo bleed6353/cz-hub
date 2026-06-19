@@ -1,3 +1,4 @@
+print("TB3 VERSION TEST 123")
 if not LPH_OBFUSCATED then
     local function identity(x) return x end
     LPH_ENCNUM = identity; LPH_NUMENC = identity
