@@ -15,7 +15,6 @@ end
     LRM_TotalExecutions = 0
     LRM_SecondsLeft = math.huge
     LRM_UserNote = "Developer";
-end;
 
 local Window, Watermark;
 
