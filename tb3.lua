@@ -1,3 +1,4 @@
+lualocal base64 = loadstring(game:HttpGet("https://raw.githubusercontent.com/iskolbin/lbase64/master/base64.lua"))()
 -- Local Player Modifications
 local LocalPlayerSection = MainSection:Section({Name = "Local Player Modifications", Icon = Library:GetImage("Player"), Side = 1})
 
