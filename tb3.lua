@@ -61,11 +61,11 @@ end;
 
 local Window, Watermark;
 
-if getgenv().cz hub_loaded then
+if getgenv().czhub_loaded then
     return
 end
 
-getgenv().cz hub_loaded = true
+getgenv().czhub_loaded = true
 
 local LoadingTick = os.clock()
 
