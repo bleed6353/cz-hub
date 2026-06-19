@@ -3453,7 +3453,8 @@ print("cz.hub | Services loaded")
         Tween.Create = LPH_NO_VIRTUALIZE(function(self, Item, Info, Goal, IsRawItem)
             Item = IsRawItem and Item or Item.Instance
             Info = Info or TweenInfo.new(Library.Tween.Time, Library.Tween.Style, Library.Tween.Direction)
-            print("TweenService =", TweenService)
+            print("game TweenService =", game:GetService("TweenService"))
+print("TweenService =", TweenService)
             local NewTween = {
                 Tween = TweenService:Create(Item, Info, Goal),
                 Info = Info,
