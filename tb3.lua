@@ -1,87 +1,5 @@
--- Local Player Modifications
-local LocalPlayerSection = MainSection:Section({Name = "Local Player Modifications", Icon = Library:GetImage("Player"), Side = 1})
-
-LocalPlayerSection:Button({
-    Name = "Local Player",
-    Tooltip = "Toggle Infinite Sleep, Hunger, Stamina, Auto Pickup & more",
-    Callback = function()
-        Config.The_Bronx.PlayerModifications.InfiniteSleep = not Config.The_Bronx.PlayerModifications.InfiniteSleep
-        Config.The_Bronx.PlayerModifications.InfiniteHunger = not Config.The_Bronx.PlayerModifications.InfiniteHunger
-        Config.The_Bronx.PlayerModifications.InfiniteStamina = not Config.The_Bronx.PlayerModifications.InfiniteStamina
-        Config.The_Bronx.PlayerModifications.InstantInteract = not Config.The_Bronx.PlayerModifications.InstantInteract
-        Config.The_Bronx.PlayerModifications.InstantRevive = not Config.The_Bronx.PlayerModifications.InstantRevive
-        Config.The_Bronx.PlayerModifications.AutoPickupCash = not Config.The_Bronx.PlayerModifications.AutoPickupCash
-        Config.The_Bronx.PlayerModifications.AutoPickupBags = not Config.The_Bronx.PlayerModifications.AutoPickupBags
-        Config.The_Bronx.PlayerModifications.DisableCameraBobbing = not Config.The_Bronx.PlayerModifications.DisableCameraBobbing
-        Config.The_Bronx.PlayerModifications.DisableBloodEffects = not Config.The_Bronx.PlayerModifications.DisableBloodEffects
-        Config.The_Bronx.PlayerModifications.BypassLockedCars = not Config.The_Bronx.PlayerModifications.BypassLockedCars
-        Config.The_Bronx.PlayerModifications.DisableCameras = not Config.The_Bronx.PlayerModifications.DisableCameras
-        Config.The_Bronx.PlayerModifications.NoJumpCooldown = not Config.The_Bronx.PlayerModifications.NoJumpCooldown
-        Config.The_Bronx.PlayerModifications.NoRentPay = not Config.The_Bronx.PlayerModifications.NoRentPay
-        Config.The_Bronx.PlayerModifications.NoFallDamage = not Config.The_Bronx.PlayerModifications.NoFallDamage
-        Config.The_Bronx.PlayerModifications.FasterRespawn = not Config.The_Bronx.PlayerModifications.FasterRespawn
-        Config.The_Bronx.PlayerModifications.NoKnockback = not Config.The_Bronx.PlayerModifications.NoKnockback
-        Config.The_Bronx.PlayerModifications.InfiniteHealth = not Config.The_Bronx.PlayerModifications.InfiniteHealth
-        Config.The_Bronx.PlayerModifications.RespawnWhereYouDied = not Config.The_Bronx.PlayerModifications.RespawnWhereYouDied
-
-        Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
-    end
-})
-
--- Local Character Modifications
-local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
-
-LocalCharacterSection:Button({
-    Name = "Local Character",
-    Tooltip = "Modify WalkSpeed, JumpPower, Click Teleport, No-Clip",
-    Callback = function()
-        Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
-        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
-        Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
-    end
-})
-
--- Local Character Modifications
-local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
-
-LocalCharacterSection:Button({
-    Name = "Local Character",
-    Tooltip = "Modify WalkSpeed, JumpPower, Click Teleport, No-Clip",
-    Callback = function()
-        Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
-        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
-        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
-        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
-
-        Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
-    end
-})
-})
-
--- ====================== LOCAL CHARACTER MODIFICATIONS ======================
-local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
-
-LocalCharacterSection:Button({
-    Name = "Local Character",
-    Tooltip = "Toggle WalkSpeed, JumpPower, Click Teleport, No-Clip, etc.",
-    Callback = function()
-        Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
-        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
-        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
-        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
-
-        Library:Notify("cz_hub.gg", "✅ All Local Character cheats toggled!", 3)
-    end
-})
-        Config.The_Bronx.PlayerModifications.AutoPickupCash = not Config.The_Bronx.PlayerModifications.AutoPickupCash
-        Config.The_Bronx.PlayerModifications.AutoPickupBags = not Config.The_Bronx.PlayerModifications.AutoPickupBags
-        Config.The_Bronx.PlayerModifications.DisableCameraBobbing = not Config.The_Bronx.PlayerModifications.DisableCameraBobbing
-        Config.The_Bronx.PlayerModifications.DisableBloodEffects = not Config.The_Bronx.PlayerModifications.DisableBloodEffects
-        Config.The_Bronx.PlayerModifications.Bypass
-    end
-    LPH_STRENC = LPH_ENCSTR
-    LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
-        
+LPH_STRENC = LPH_ENCSTR
+LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
         assert(type(toEncrypt) == "function" and type(encKey) == "string" and #{...} == 0, "LPH_ENCFUNC accepts a constant function, constant string, and string variable as arguments.")
         return toEncrypt
     end
@@ -100,7 +18,7 @@ LocalCharacterSection:Button({
         assert(type(f) == "function" and #{...} == 0, "LPH_NO_UPVALUES only accepts a single constant function as an argument.")
         local env = getrenv()
         return setfenv(
-            LPH_NO_VIRTUALIZE(function(...)
+            LPH_NO_VIRTUALIZE(function(...){
                 return func(...)
             end),
             setmetatable(
@@ -118,6 +36,13 @@ LocalCharacterSection:Button({
         assert(#{...} == 0, "LPH_CRASH does not accept any arguments.")
         game:Shutdown()
         while true do end
+    end
+    LRM_IsUserPremium = false
+    LRM_LinkedDiscordID = "1096603799159832636"
+    LRM_ScriptName = "cz_hub"
+    LRM_TotalExecutions = 0
+    LRM_SecondsLeft = math.huge
+    LRM_UserNote = "Developer";
     end
     LRM_IsUserPremium = false
     LRM_LinkedDiscordID = "1096603799159832636"
