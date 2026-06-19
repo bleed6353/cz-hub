@@ -1,30 +1,71 @@
-print("TB3 VERSION TEST 123")
-print("CHECKPOINT 1")
-if not LPH_OBFUSCATED then
-    local function identity(x) return x end
-    LPH_ENCNUM = identity; LPH_NUMENC = identity
-    LPH_ENCSTR = identity; LPH_STRENC = identity
-    LPH_ENCFUNC = identity; LPH_FUNCENC = identity
-    LPH_JIT = identity; LPH_JIT_MAX = identity
-    LPH_NO_VIRTUALIZE = identity
-    LPH_NO_UPVALUES = identity
-    LPH_CRASH = function() end
-end
-
+if LPH_OBFUSCATED == nil then
+    local assert = assert
+    local type = type
+    local setfenv = setfenv
+    LPH_ENCNUM = function(toEncrypt, ...)
+        assert(type(toEncrypt) == "number" and #{...} == 0, "LPH_ENCNUM only accepts a single constant double or integer as an argument.")
+        return toEncrypt
+    end
+    LPH_NUMENC = LPH_ENCNUM
+    LPH_ENCSTR = function(toEncrypt, ...)
+        assert(type(toEncrypt) == "string" and #{...} == 0, "LPH_ENCSTR only accepts a single constant string as an argument.")
+        return toEncrypt
+    end
+    LPH_STRENC = LPH_ENCSTR
+    LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
+        
+        assert(type(toEncrypt) == "function" and type(encKey) == "string" and #{...} == 0, "LPH_ENCFUNC accepts a constant function, constant string, and string variable as arguments.")
+        return toEncrypt
+    end
+    LPH_FUNCENC = LPH_ENCFUNC
+    LPH_JIT = function(f, ...)
+        assert(type(f) == "function" and #{...} == 0, "LPH_JIT only accepts a single constant function as an argument.")
+        return f
+    end
+    LPH_JIT_MAX = LPH_JIT
+    LPH_NO_VIRTUALIZE = function(f, ...)
+        assert(type(f) == "function" and #{...} == 0, "LPH_NO_VIRTUALIZE only accepts a single constant function as an argument.")
+        return f
+    end
+    LPH_NO_UPVALUES = function(f, ...)
+        assert(type(setfenv) == "function", "LPH_NO_UPVALUES can only be used on Lua versions with getfenv & setfenv")
+        assert(type(f) == "function" and #{...} == 0, "LPH_NO_UPVALUES only accepts a single constant function as an argument.")
+        local env = getrenv()
+        return setfenv(
+            LPH_NO_VIRTUALIZE(function(...)
+                return func(...)
+            end),
+            setmetatable(
+                {
+                    func = f
+                },
+                {
+                    __index = env,
+                    __newindex = env
+                }
+            )
+        )
+    end
+    LPH_CRASH = function(...)
+        assert(#{...} == 0, "LPH_CRASH does not accept any arguments.")
+        game:Shutdown()
+        while true do end
+    end
     LRM_IsUserPremium = false
     LRM_LinkedDiscordID = "1096603799159832636"
-    LRM_ScriptName = "cz"
+    LRM_ScriptName = "valary"
     LRM_TotalExecutions = 0
     LRM_SecondsLeft = math.huge
     LRM_UserNote = "Developer";
+end;
 
 local Window, Watermark;
 
-if getgenv().cz_loaded then
+if getgenv().valary_loaded then
     return
 end
 
-getgenv().cz_loaded = true
+getgenv().valary_loaded = true
 
 local LoadingTick = os.clock()
 
@@ -45,14 +86,14 @@ local Services = setmetatable({}, {
         return (cloneref ~= nil) and cloneref(game:GetService(service)) or game:GetService(service)
     end)
 })
-print("CHECKPOINT 2")
+
 for Index, Value in getconnections(gethui().ChildRemoved) do
     Value:Disable()
 end
-print("TOP")
+
 local Config = {
     ["Gun_Handle"] = nil;
-    ["cz_Users"] = {};
+    ["Valary_Users"] = {};
 
     Tracers = {
         Enabled = false;
@@ -75,36 +116,34 @@ local Config = {
         Pop = "rbxassetid://198598793",
         Bruh = "rbxassetid://4275842574",
         Bamboo = "rbxassetid://3769434519",
-        Steve = "rbxassetid://4965083997";
-};
+        Steve = "rbxassetid://4965083997"
+    };
 
-   Hit_Sounds_Settings = {
-    Enabled = false;
-    Volume = 5;
-    Selected = "Neverlose";
-    HideNormalSounds = false;
-};
+    Hit_Sounds_Settings = {
+        Enabled = false;
+        Volume = 5;
+        Selected = "Neverlose";
+        HideNormalSounds = false;
+    };
 
-["WorldVisuals"] = {
-    SaturationEnabled = false;
-    Saturation_Value = 1;
+    ["WorldVisuals"] = {
+        ["SaturationEnabled"] = false;
+        ["Saturation_Value"] = 1;
 
-    StretchEnabled = false;
-    StretchValue = 0.7;
+        ["StretchEnabled"] = false;
+        ["StretchValue"] = 0.7;
 
-    FogColorEnabled = false;
-    FogColor = Color3.new(1,1,1);
+        ["FogColorEnabled"] = false;
+        ["FogColor"] = Color3.new(1,1,1);
 
-    AmbientEnabled = false;
-    AmbientColor = Color3.new(1,1,1);
+        ["AmbientEnabled"] = false;
+        ["AmbientColor"] = Color3.new(1,1,1);
 
-    FieldOfViewEnabled = false;
-    FieldOfViewValue = 70;
+        ["FieldOfViewEnabled"] = false;
+        ["FieldOfViewValue"] = 70;
 
-    Fullbright = false;
-};
-
-
+        ["Fullbright"] = false;
+    };
 
     ["Gun_Held"] = false;
 
@@ -264,10 +303,6 @@ local ReplicatedStorage = Services.ReplicatedStorage;
 local UserInputService = Services.UserInputService;
 local Workspace = Services.Workspace;
 local RunService = Services.RunService;
-local Heartbeat = RunService.Heartbeat;           -- Add
-local RenderStepped = RunService.RenderStepped;   -- Add
-local Stepped = RunService.Stepped;               -- Add
-
 local ProximityPromptService = Services.ProximityPromptService;
 local MarketplaceService = Services.MarketplaceService;
 local StarterGui = Services.StarterGui
@@ -299,7 +334,7 @@ for Index, Value in LocalPlayer.Character:GetDescendants() do
     end)
 end
 
-local Target_Highlight = Instance.new("Highlight", CoreGui)
+local Target_Highlight = Instance.new("Highlight", Services.CoreGui)
 
 Target_Highlight.FillColor = Config.FieldOfView.HightlightFillColor
 Target_Highlight.OutlineColor = Color3.new(1,1,1)
@@ -321,7 +356,7 @@ local FireServer, InvokeServer, UnreliableFireServer = Instance.new("RemoteEvent
 
 if isfunctionhooked then
     if isfunctionhooked(FireServer) or isfunctionhooked(UnreliableFireServer) or isfunctionhooked(InvokeServer) and LPH_OBFUSCATED then
-        return Services.Players.LocalPlayer:Kick("cz.hub | Security : You are running another script, please disable it and execute again")
+        return Services.Players.LocalPlayer:Kick("Valary.gg | Security : You are running another script, please disable it and execute again")
     end
 end
 
@@ -354,14 +389,14 @@ do -- FrameWork
         frame.Parent = Black_UI
     
         local textLabel = Instance.new("TextLabel")
-        textLabel.Name = "\nhideuicz"
+        textLabel.Name = "\nhideuivalary"
         textLabel.Size = UDim2.new(0, 400, 0, 100)
         textLabel.Font = Enum.Font.SourceSansBold
         textLabel.RichText = true
         local accent = Library.Theme.Accent
         local accentString = string.format("rgb(%d,%d,%d)", accent.R * 255, accent.G * 255, accent.B * 255)
 
-        textLabel.Text = '<font color="' .. accentString .. '">cz</font>\n' .. Title
+        textLabel.Text = '<font color="' .. accentString .. '">valary</font>\n' .. Title
         textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         textLabel.BackgroundTransparency = 1
         textLabel.TextSize = 36
@@ -381,7 +416,7 @@ do -- FrameWork
             local accent = Library.Theme.Accent
             local accentString = string.format("rgb(%d,%d,%d)", accent.R * 255, accent.G * 255, accent.B * 255)
 
-            Black_UI["\nhideuicz"].Text = '<font color="' .. accentString .. '">cz</font>\n' .. Text
+            Black_UI["\nhideuivalary"].Text = '<font color="' .. accentString .. '">valary</font>\n' .. Text
         end
     end)
 
@@ -686,41 +721,62 @@ do -- FrameWork
         CheckPlayer(Value)
     end
     
-  local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
-    if not Config.Silent.Enabled then
-        Target = nil
-        return nil
-    end
-
-    local ClosestPlayer, ClosestDistance = nil, math.huge
-    local MousePos = UserInputService:GetMouseLocation()
-    local Radius = Config.TargetSelector.UseFOV and Config.FieldOfView.Radius or 9e9
-
-    for _, Player in ipairs(Players:GetPlayers()) do
-        if Player == LocalPlayer then continue end
-        if table.find(Library.Friendly_Players, Player.Name) then continue end
-
-        local Character = Player.Character
-        if not Character or not Character:FindFirstChild("Head") then continue end
-
-        local Humanoid = Character:FindFirstChild("Humanoid")
-        if not Humanoid or Humanoid.Health <= 0 then continue end
-
-        local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Character.Head.Position)
-        if not OnScreen then continue end
-
-        local Distance = (Vector2.new(ScreenPos.X, ScreenPos.Y) - MousePos).Magnitude
-        if Distance > Radius then continue end
-
-        if Distance < ClosestDistance then
-            ClosestDistance = Distance
-            ClosestPlayer = Player
+    local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
+        if Device_Mobile then
+            Config.TargetSelector.Targetting = Config.Silent.Enabled
         end
-    end
 
-    Target = ClosestPlayer
-    return Target
-end)
+        if not Config.TargetSelector.Targetting then
+            Target = nil
+            return nil
+        end
+    
+        local PlayersList = Players:GetPlayers()
+        local MouseLocation = Device_Mobile and Center_Of_Screen or Vector2.new(Mouse.X, Mouse.Y)
+        local Radius = Config.TargetSelector.UseFOV and Config.FieldOfView.Radius or math.huge
+    
+        local ClosestPlayer = nil
+        local ClosestDistance = math.huge
+    
+        for _, Player in ipairs(PlayersList) do
+            if Player == LocalPlayer then continue end
+            if table.find(Library.Friendly_Players, Player.Name) then continue end
+    
+            local Character = Player.Character
+            if not Character then continue end
+    
+            local Humanoid = Character:FindFirstChild("Humanoid")
+            local Head = Character:FindFirstChild("Head")
+    
+            if not Humanoid or not Head then continue end
+    
+            local ScreenPos, OnScreen = Camera:WorldToScreenPoint(Head.Position)
+            if not OnScreen then continue end
+    
+            local Distance = (Vector2.new(ScreenPos.X, ScreenPos.Y) - MouseLocation).Magnitude
+            if Distance > Radius then continue end
+
+            local IsVisible = true
+            if Config.TargetSelector.VisibleCheck and not Config.Silent.WallBang then
+                IsVisible = WallCheck(Character)
+                if not IsVisible then continue end
+            end
+
+            if Config.TargetSelector.HealthCheck and Humanoid.Health < Config.TargetSelector.Health then continue end
+            if Config.TargetSelector.FriendCheck and table.find(Friends, Player.Name) then continue end
+            if Config.TargetSelector.LimitDistance and not DistanceCheck(Player, Config.TargetSelector.MaxDistance) then continue end
+            --if library.get_priority(Player) == "Friendly" then continue end
+    
+            if Distance < ClosestDistance then
+                ClosestDistance = Distance
+                ClosestPlayer = Player
+            end
+        end
+    
+        Target = ClosestPlayer
+        return Target
+    end)
+
     local FindFirstChild = Workspace.FindFirstChild
     local Tracer_Delay = false
 
@@ -808,47 +864,55 @@ end)
         end)
     end)
 
-    local OldNamecall
-OldNamecall = hookmetamethod(game, "__namecall", LPH_NO_VIRTUALIZE(function(Self, ...)
-    local Args = {...}
-    local Method = getnamecallmethod()
+    __namecall_hook = nil; __namecall_hook = hookmetamethod(Workspace, "__namecall", LPH_NO_VIRTUALIZE(function(Self, ...)
+        local Arguments = {...}
+        local Method = getnamecallmethod()
+        
+        if Method == "FireServer" then
+            if Self == ReplicatedStorage.InflictTarget and not checkcaller() then
+                task.spawn(Config.PlaySound)
+            end 
+        end 
 
-    -- Hit Sound
-    if Method == "FireServer" and Self == ReplicatedStorage.InflictTarget and not checkcaller() then
-        task.spawn(Config.PlaySound)
-    end
+        if string.find(string.lower(Method), 'findpartonray') then
+            local cs = getcallingscript()
 
-    -- Silent Aim + Tracers
-    if (Method == "FindPartOnRay" or Method == "findPartOnRay") then
-        if Config.Silent.Enabled and Target and Target.Character then
-            if math.random(1, 100) > Config.Silent.HitChance then
-                return OldNamecall(Self, ...)
+            if checkcaller() or string.find(cs.Name, "CameraModule") then
+                return __namecall_hook(Self, unpack(Arguments))
             end
 
-            local HitPartName = Config.Silent.HitParts[math.random(#Config.Silent.HitParts)] or "Head"
-            local HitPart = Target.Character:FindFirstChild(HitPartName)
-
-            if HitPart then
-                local Origin = Args[1].Origin
-                local Direction = (HitPart.Position - Origin).Unit * 10000
-
-                Args[1] = Ray.new(Origin, Direction)
-
-                if Config.Tracers.Enabled then
-                    task.spawn(Config.Tracer, HitPart.Position)
+            if Config.Silent.Enabled then
+                if not (math.random(0, 100) <= Config.Silent.HitChance) then
+                    return __namecall_hook(Self, ...)
                 end
 
-                if Config.Silent.WallBang then
-                    return HitPart, HitPart.Position, Vector3.zero
+                if Target and Target.Character then
+                    local TargetPart = FindFirstChild(Target.Character, Config.Silent.HitParts[1] and Config.Silent.HitParts[math.random(1, #Config.Silent.HitParts)] or "Head")
+                    if TargetPart then
+                        local Origin = Arguments[1].Origin;
+
+                        local Direction = (TargetPart.Position - Origin).Unit * 9e17;
+
+                        Arguments[1] = Ray.new(Origin, Direction)
+
+                        if Config.Silent.WallBang then
+                            if Config.Tracers.Enabled then
+                                task.spawn(Config.Tracer, TargetPart.Position)
+                            end
+
+                            return TargetPart, TargetPart.Position, Vector3.new(0,0,0)
+                        end
+                    end
                 end
             end
-        elseif Config.Tracers.Enabled then
-            task.spawn(Config.Tracer, Args[1].Origin + Args[1].Direction)
+
+            if Config.Tracers.Enabled then
+                task.spawn(Config.Tracer, Arguments[1].Origin + Arguments[1].Direction)
+            end
         end
-    end
 
-    return OldNamecall(Self, unpack(Args))
-end))
+        return __namecall_hook(Self, unpack(Arguments))
+    end))
 
     local OldLightingSettings = {}
 
@@ -1629,7 +1693,7 @@ end))
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                Heartbeat:Wait()
+                task.wait(0)
                 if Config.VehicleModifications.SpeedEnabled and UserInputService:IsKeyDown(Enum.KeyCode.W) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1648,7 +1712,7 @@ end))
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                Heartbeat:Wait()
+                task.wait(0)
                 if Config.VehicleModifications.BreakEnabled and UserInputService:IsKeyDown(Enum.KeyCode.S) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1667,7 +1731,7 @@ end))
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                Heartbeat:Wait()
+                task.wait(0)
                 if Config.VehicleModifications.InstantStop and UserInputService:IsKeyDown(Config.VehicleModifications.InstantStopBind) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1686,88 +1750,277 @@ end))
         end))
     --
 
-   -- ==================== IMPROVED WEAPON MODIFICATIONS ====================
+    -- Weapon Modifications
+        do
+            local OldWeaponValues = {}
 
-local OldRequire = require  -- Save original require
+            local GetAllTools = LPH_NO_VIRTUALIZE(function(LocalToolsOnly)
+                local Result = {}
+    
+                for _, Value in next, {not LocalToolsOnly and Lighting, LocalPlayer.Backpack, LocalPlayer.Character ~= nil and LocalPlayer.Character} do
+                    if type(Value) == "userdata" then
+                        for _, _Value in next, Value:GetChildren() do
+                            --if _Value.Name == "TP9EliteTan" then continue end
+                            Result[#Result + 1] = _Value
+                        end
+                    end
+                end
+    
+                return Result
+            end)
 
--- Safe Require Hook
-require = LPH_NO_VIRTUALIZE(function(obj)
-    if typeof(obj) == "Instance" and obj.Name == "Setting" then
-        local success, config = pcall(OldRequire, obj)
-        if not success then return {} end
+            local GetPercentage = LPH_NO_VIRTUALIZE(function(DefaultValue, NewValue)
+                NewValue = math.max(0, math.min(100, NewValue))
 
-        local Mods = Config.The_Bronx._Modifications
+                local newRecoil = DefaultValue * (NewValue / 100)
+            
+                return newRecoil
+            end)
 
-        if Mods.InfiniteDamage then config.BaseDamage = math.huge end
-        if Mods.ModifyFireRate then config.FireRate = Mods.FireRateSpeed end
-        if Mods.InstantReload then config.ReloadTime = 0.01 end
-        if Mods.InstantEquip then config.EquipTime = 0.01 end
-        if Mods.Automatic then config.Auto = true end
-        if Mods.DisableJamming then config.JamChance = 0 end
+            local Ammo_Task = nil
+            local Mag_Task = nil
 
-        if Mods.ModifySpreadValue then
-            local spread = Mods.SpreadPercentage / 100
-            if config.Spread then config.Spread *= spread end
-            if config.SpreadX then config.SpreadX *= spread end
-            if config.SpreadY then config.SpreadY *= spread end
-            if config.SpreadXY then config.SpreadXY *= spread end
-            if config.SpreadYX then config.SpreadYX *= spread end
-        end
+            local ModWeapon = LPH_NO_VIRTUALIZE(function(Weapon)
+                local Module = Weapon:FindFirstChildOfClass("ModuleScript")
+                local OldConfig = OldWeaponValues[Weapon.Name]
 
-        if Mods.ModifyRecoilValue then
-            local recoil = Mods.RecoilPercentage / 100
-            if config.Recoil then config.Recoil *= recoil end
-        end
+                if not OldConfig then
+                    return
+                end
+    
+                if Module and Module.Name == "Setting" then
+                    Module = require(Module)
+                else
+                    return
+                end
 
-        return config
-    end
-    return OldRequire(obj)
-end)
+                if SetInfiniteAmmo == nil then
+                    SetInfiniteAmmo = true
+                end
 
--- Infinite Ammo & Clips
-do
-    local Ammo_Task, Mag_Task = nil, nil
+                if SetInfiniteClips == nil then
+                    SetInfiniteClips = true
+                end
 
-    local function ApplyInfiniteAmmo(Weapon)
-        if not Weapon or not Weapon:FindFirstChild("GunScript_Local") then return end
-        local env = getsenv(Weapon.GunScript_Local)
+                if Config.The_Bronx._Modifications.InfiniteClips then
+                    if Mag_Task and coroutine.status(Mag_Task) == "suspended" then
+                        task.cancel(Mag_Task)
+                        Mag_Task = nil
+                    end
+                    
+                    Mag_Task = task.spawn(function()
+                        while true do
+                            task.wait(0.01)
 
-        if Config.The_Bronx._Modifications.InfiniteAmmo then
-            if Ammo_Task then task.cancel(Ammo_Task) end
-            Ammo_Task = task.spawn(function()
-                while true do
-                    Heartbeat:Wait()
-                    if Weapon.Parent == LocalPlayer.Character then
-                        pcall(function() debug.setupvalue(env.Reload, 3, 9999) end)
-                    else
-                        break
+                            if Config.The_Bronx._Modifications.InfiniteClips and Weapon ~= nil and Weapon.Parent ~= nil and LocalPlayer.Character ~= nil and Weapon.Parent == LocalPlayer.Character then
+                                debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 1, OldConfig.AmmoPerMag)
+                            else
+                                break
+                            end
+                        end
+                    end)
+
+                    SetInfiniteClips = false
+                end
+
+                if Config.The_Bronx._Modifications.InfiniteClips == false and SetInfiniteClips == false then
+                    debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 1, OldConfig.AmmoPerMag)
+
+                    SetInfiniteClips = true
+                end
+
+                if Config.The_Bronx._Modifications.InfiniteAmmo then
+                    if Ammo_Task and coroutine.status(Ammo_Task) == "suspended" then
+                        task.cancel(Ammo_Task)
+                        Ammo_Task = nil
+                    end
+                    
+                    Ammo_Task = task.spawn(function()
+                        while true do
+                            task.wait(0.01)
+
+                            if Config.The_Bronx._Modifications.InfiniteAmmo and Weapon ~= nil and Weapon.Parent ~= nil and LocalPlayer.Character ~= nil and Weapon.Parent == LocalPlayer.Character then
+                                debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 3, OldConfig.AmmoPerMag)
+                            else
+                                break
+                            end
+                        end
+                    end)
+
+                    SetInfiniteAmmo = false
+                end
+
+                if Config.The_Bronx._Modifications.InfiniteAmmo == false and SetInfiniteAmmo == false then
+                    debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 3, OldConfig.AmmoPerMag)
+
+                    SetInfiniteAmmo = true
+                end
+
+                --Module.LimitedAmmoEnabled = false
+
+                Module.FireRate = Config.The_Bronx._Modifications.ModifyFireRate and GetPercentage(OldConfig.FireRate, Config.The_Bronx._Modifications.FireRateSpeed) or OldConfig.FireRate
+                            
+                Module.ReloadTime = Config.The_Bronx._Modifications.InstantReload and 0.01 or OldConfig.ReloadTime
+                                
+                if Module.SpreadXY then
+                    Module.SpreadXY = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadXY, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadXY
+                end
+
+                if Module.SpreadYX then
+                    Module.SpreadYX = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadYX, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadYX
+                end
+
+                if Module.Spread then
+                    Module.Spread = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.Spread, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.Spread
+                end
+
+                Module.SpreadX = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadX, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadX
+                Module.SpreadY = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadY, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadY
+
+                Module.Recoil = Config.The_Bronx._Modifications.ModifyRecoilValue and GetPercentage(OldConfig.Recoil, Config.The_Bronx._Modifications.RecoilPercentage) or OldConfig.Recoil
+
+                Module.BaseDamage = Config.The_Bronx._Modifications.InfiniteDamage and math.huge or OldConfig.BaseDamage
+
+                Module.Auto = Config.The_Bronx._Modifications.Automatic or OldConfig.Auto
+            
+                Module.JamChance = Config.The_Bronx._Modifications.DisableJamming and 0 or OldConfig.JamChance
+    
+                Module.Auto = Config.The_Bronx._Modifications.Automatic or OldConfig.Auto
+        
+                Module.EquipTime = Config.The_Bronx._Modifications.InstantEquip and 0.01 or OldConfig.EquipTime
+
+                Module.JamChance = Config.The_Bronx._Modifications.NoJam and 0 or OldConfig.JamChance
+            end)
+
+            local ModWeapons = LPH_NO_VIRTUALIZE(function()
+                for _, Weapon in next, GetAllTools(true) do
+                    if Weapon:IsA("Tool") then
+                        ModWeapon(Weapon)
                     end
                 end
             end)
-        end
 
-        if Config.The_Bronx._Modifications.InfiniteClips then
-            if Mag_Task then task.cancel(Mag_Task) end
-            Mag_Task = task.spawn(function()
-                while true do
-                    Heartbeat:Wait()
-                    if Weapon.Parent == LocalPlayer.Character then
-                        pcall(function() debug.setupvalue(env.Reload, 1, 9999) end)
-                    else
-                        break
+            local SetValues = LPH_NO_VIRTUALIZE(function()
+                for _, Weapon in next, GetAllTools() do
+                    if Weapon:IsA("Tool") then
+                        local Module = Weapon:FindFirstChildOfClass("ModuleScript")
+
+                        if Module and Module.Name == "Setting" then
+                            Module = require(Module)
+                        end
+
+                        if type(Module) == "table" and not OldWeaponValues[Weapon.Name] then
+                            OldWeaponValues[Weapon.Name] = {}
+
+                            local OldConfig = OldWeaponValues[Weapon.Name]
+
+                            for Index, Value in next, Module do
+                                OldConfig[Index] = Value
+                            end
+                        end
                     end
                 end
             end)
-        end
-    end
 
-    LocalPlayer.Character.ChildAdded:Connect(function(Tool)
-        if Tool:IsA("Tool") and Tool:FindFirstChild("Setting") then
-            task.wait(0.2)
-            ApplyInfiniteAmmo(Tool)
+            if not LocalPlayer.Character then LocalPlayer.CharacterAdded:Wait() end
+
+            LocalPlayer.Character.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                if not Value:IsA("Tool") then return end
+                if Value:FindFirstChild("Setting") then
+                    Config.Gun_Held = true
+                    Config.Gun_Handle = Value:WaitForChild("Handle", 1)
+
+                    if HideGunSoundsConnection then
+                        HideGunSoundsConnection:Disconnect()
+                        HideGunSoundsConnection = nil
+                    end
+
+                    HideGunSoundsConnection = Value:WaitForChild("Handle").ChildAdded:Connect(function(_Child)
+                        task.wait();
+
+                        if _Child:IsA("Sound") and Config.Hit_Sounds_Settings.HideNormalSounds then
+                            _Child:Destroy()
+                        end
+                    end)
+                end
+
+                SetValues()
+
+                ModWeapon(Value);
+            end))
+
+            LocalPlayer.Character.ChildRemoved:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                if not Value:IsA("Tool") then return end
+                if Value:FindFirstChild("Setting") then
+                    Config.Gun_Held = false
+                    Config.Gun_Handle = nil
+                end
+            end))
+
+            LocalPlayer.Backpack.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                if not Value:IsA("Tool") then return end
+                
+                SetValues()
+
+                ModWeapon(Value);
+            end))
+
+            LocalPlayer.CharacterAdded:Connect(function(Character)
+                Config.Gun_Held = false
+                Character.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                    if not Value:IsA("Tool") then return end
+                    if Value:FindFirstChild("Setting") then
+                        Config.Gun_Held = true
+                        Config.Gun_Handle = Value:WaitForChild("Handle", 1)
+                    end
+
+                    if HideGunSoundsConnection then
+                        HideGunSoundsConnection:Disconnect()
+                        HideGunSoundsConnection = nil
+                    end
+
+                    HideGunSoundsConnection = Value.Handle.ChildAdded:Connect(function(_Child)
+                        task.wait();
+
+                        if _Child:IsA("Sound") and Config.Hit_Sounds_Settings.HideNormalSounds then
+                            _Child:Destroy()
+                        end
+                    end)
+    
+                    SetValues()
+
+                    ModWeapon(Value);
+                end))
+
+                Character.ChildRemoved:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                    if not Value:IsA("Tool") then return end
+                    if Value:FindFirstChild("Setting") then
+                        Config.Gun_Held = false
+                        Config.Gun_Handle = nil
+                    end
+                end))
+    
+                LocalPlayer.Backpack.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
+                    if not Value:IsA("Tool") then return end
+                        
+                    SetValues()
+
+                    ModWeapon(Value);
+                end))
+            end)
+
+            local ConfigMetatable = getmetatable(Config.The_Bronx.Modifications)
+
+            ConfigMetatable.__index = LPH_NO_VIRTUALIZE(function(...)
+                return Config.The_Bronx._Modifications[select(2, ...)]
+            end)
+    
+            ConfigMetatable.__newindex = LPH_NO_VIRTUALIZE(function(...)
+                local Index, Value = select(2, ...)
+    
+                Config.The_Bronx._Modifications[Index] = Value; ModWeapons()
+            end)
         end
-    end)
-end
     --
 
     table.sort(Config.The_Bronx.Guns)
@@ -1789,7 +2042,7 @@ local Options, MiscOptions do
     local RunService = cloneref(game:GetService("RunService"))
     local HttpService = cloneref(game:GetService("HttpService"))
     local Players = cloneref(game:GetService("Players"))
-    local TweenService = game:GetService("TweenService")
+    local TweenService = cloneref(game:GetService("TweenService"))
 
     local vec2 = Vector2.new
     local vec3 = Vector3.new
@@ -1929,7 +2182,7 @@ local Options, MiscOptions do
         for name, suffix in FontNames do 
             local RegisteredFont = RegisterFont(name, 400, "Normal", {
                 Id = suffix,
-                Font = game:HttpGet("https://github.com/i77lhm/storage/raw/fonts/" .. suffix),
+                Font = game:HttpGet("https://github.com/i77lhm/storage/raw/refs/heads/main/fonts/" .. suffix),
             }) 
 
             Fonts[name] = Font.new(RegisteredFont, Enum.FontWeight.Regular, Enum.FontStyle.Normal)
@@ -2012,11 +2265,11 @@ local Options, MiscOptions do
         end
 
         function Esp:Tween(Object, Properties, Info)
-    local tween = game:GetService("TweenService"):Create(Object, Info, Properties)
-    tween:Play()
-
-    return tween
-end
+            local tween = TweenService:Create(Object, Info, Properties)
+            tween:Play()
+            
+            return tween
+        end
 
         function Esp.CreateObject( player, typechar ) -- IMPORTANT!
             local Data = { 
@@ -2651,14 +2904,14 @@ end
                             local Alpha = math.clamp(Elapsed, 0, 1)
 
                             local Value = Esp:Lerp(
-    Data.Info.Health,
-    Value,
-    game:GetService("TweenService"):GetValue(
-        Alpha,
-        Enum.EasingStyle[MiscOptions.Healthbar_EasingStyle],
-        Enum.EasingDirection[MiscOptions.Healthbar_EasingDirection]
-    )
-)
+                                Data.Info.Health, 
+                                Value, 
+                                TweenService:GetValue(
+                                    Alpha, 
+                                    Enum.EasingStyle[MiscOptions.Healthbar_EasingStyle], 
+                                    Enum.EasingDirection[MiscOptions.Healthbar_EasingDirection]
+                                )
+                            )   
 
                             Items.HealthbarText.Text = math.floor(Value)
 
@@ -3162,32 +3415,15 @@ end
 
 do -- Library
     -- Services
-    -- ==================== FIXED SERVICES ====================
-local Players = Services.Players
-local ReplicatedStorage = Services.ReplicatedStorage
-local UserInputService = Services.UserInputService
-local Workspace = Services.Workspace
-local RunService = Services.RunService
+    local Players = game:GetService("Players")
+    local UserInputService = game:GetService("UserInputService")
+    local HttpService = game:GetService("HttpService")
+    local TweenService = game:GetService("TweenService")
+    local RunService = game:GetService("RunService")
+    local Workspace = game:GetService("Workspace")
+    local SoundService = cloneref and cloneref(game:GetService("SoundService")) or game:GetService("SoundService")
+    local CoreGui = cloneref and cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui")
 
-local Heartbeat = RunService.Heartbeat
-local RenderStepped = RunService.RenderStepped
-
-local ProximityPromptService = Services.ProximityPromptService
-local MarketplaceService = Services.MarketplaceService
-local StarterGui = Services.StarterGui
-local VirtualInputManager = Services.VirtualInputManager
-local Lighting = Services.Lighting
-local Debris = Services.Debris
-
-local Camera = Workspace.CurrentCamera
-local LocalPlayer = Players.LocalPlayer
-
--- Fix CoreGui
-local CoreGui = gethui() or Services.CoreGui or game:GetService("CoreGui")
-
-local Connections = {}
-
-print("cz.hub | Services loaded")
     -- Variables
     local LocalPlayer = Players.LocalPlayer
     local Camera = Workspace.CurrentCamera
@@ -3259,63 +3495,63 @@ print("cz.hub | Services loaded")
         },
 
         Folders = {
-            Directory = "cz",
-            Configs = "cz/TheBronx3Configs",
-            Assets = "cz/Assets",
-            Themes = "cz/Themes"
+            Directory = "valary",
+            Configs = "valary/TheBronx3Configs",
+            Assets = "valary/Assets",
+            Themes = "valary/Themes"
         },
 
         Images = { -- you're welcome to reupload the images and replace it with your own links
-            ["Saturation"] = {"Saturation.png", "https://github.com/sametexe001/images/blob/main/saturation.png" },
-            ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png" },
-            ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png" },
-            ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png" },
-            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Radar.png"},
-            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DiagonalLine.png"},
-            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AdsClick.png"},
-            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/czSoftworks/Assets/main/Forward.png"},
-            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Skull.png"},
-            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MultipleCogs.png"},
-            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Tune.png"},
-            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Wrench.png"},
-            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/IdCard.png"},
-            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AccountCircle.png"},
-            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/czSoftworks/Assets/GroupSearch.png"},
-            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/czSoftworks/Assets/USDChip.png"},
-            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Wrist.png"},
-            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/czSoftworks/Assets/PlayerUtilties.png"},
-            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CreditCard.png"},
-            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/czSoftworks/Assets/JumpToElement.png"},
-            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Apartment.png"},
-            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MoneySymbol.png"},
-            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/czSoftworks/Assets/TravelExplore.png"},
-            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Scrambler.png"},
-            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Info.png"},
-            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CarInfo.png"},
-            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AutoManifacturing.png"},
-            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MoneyBag.png"},
-            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Bolt.png"},
-            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/czSoftworks/Assets/RetroController.png"},
-            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/czSoftworks/Assets/NewController30px.png"},
-            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Home.png"},
-            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Lock.png"},
-            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/czSoftworks/Assets/EncryptedOff.png"},
-            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DeployedCodeAccount.png"},
-            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/czSoftworks/Assets/IdentityPlatform.png"},
-            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DataLossPrevention.png"},
-            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CarGear.png"},
-            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Groups.png"},
-            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/czSoftworks/Assets/GlobePublic.png"},
-            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/LightBulb.png"},
-            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Cloud.png"},
-            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Contrast.png"},
-            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/czSoftworks/Assets/TrailShort.png"},
-            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/czSoftworks/Assets/EyeTracking.png"},
-            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/czSoftworks/Assets/ScreenRotation.png"},
-            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/czSoftworks/Assets/QueryStats.png"},
-            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CellTower.png"},
-            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Bomb.png"},
-            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Servers.png"},
+            ["Saturation"] = {"Saturation.png", "https://github.com/sametexe001/images/blob/main/saturation.png?raw=true" },
+            ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png?raw=true" },
+            ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png?raw=true" },
+            ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png?raw=true" },
+            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Radar.png?raw=true"},
+            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/DiagonalLine.png?raw=true"},
+            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/AdsClick.png?raw=true"},
+            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Forward.png?raw=true"},
+            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Skull.png?raw=true"},
+            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/MultipleCogs.png?raw=true"},
+            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Tune.png?raw=true"},
+            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Wrench.png?raw=true"},
+            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/IdCard.png?raw=true"},
+            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/AccountCircle.png?raw=true"},
+            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/GroupSearch.png?raw=true"},
+            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/USDChip.png?raw=true"},
+            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Wrist.png?raw=true"},
+            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/PlayerUtilties.png?raw=true"},
+            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/CreditCard.png?raw=true"},
+            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/JumpToElement.png?raw=true"},
+            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Apartment.png?raw=true"},
+            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/MoneySymbol.png?raw=true"},
+            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/TravelExplore.png?raw=true"},
+            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Scrambler.png?raw=true"},
+            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Info.png?raw=true"},
+            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/CarInfo.png?raw=true"},
+            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/AutoManifacturing.png?raw=true"},
+            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/MoneyBag.png?raw=true"},
+            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Bolt.png?raw=true"},
+            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/RetroController.png?raw=true"},
+            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/NewController30px.png?raw=true"},
+            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Home.png?raw=true"},
+            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Lock.png?raw=true"},
+            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/EncryptedOff.png?raw=true"},
+            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/DeployedCodeAccount.png?raw=true"},
+            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/IdentityPlatform.png?raw=true"},
+            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/DataLossPrevention.png?raw=true"},
+            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/CarGear.png?raw=true"},
+            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Groups.png?raw=true"},
+            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/GlobePublic.png?raw=true"},
+            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/LightBulb.png?raw=true"},
+            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Cloud.png?raw=true"},
+            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Contrast.png?raw=true"},
+            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/TrailShort.png?raw=true"},
+            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/EyeTracking.png?raw=true"},
+            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/ScreenRotation.png?raw=true"},
+            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/QueryStats.png?raw=true"},
+            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/CellTower.png?raw=true"},
+            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Bomb.png?raw=true"},
+            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/Servers.png?raw=true"},
         },
 
         Friendly_Players = {}, Priority_Players = {}, Selected_Player = nil,
@@ -3453,10 +3689,9 @@ print("cz.hub | Services loaded")
         Tween.Create = LPH_NO_VIRTUALIZE(function(self, Item, Info, Goal, IsRawItem)
             Item = IsRawItem and Item or Item.Instance
             Info = Info or TweenInfo.new(Library.Tween.Time, Library.Tween.Style, Library.Tween.Direction)
-            print("game TweenService =", game:GetService("TweenService"))
-print("TweenService =", TweenService)
+
             local NewTween = {
-                Tween = game:GetService("TweenService"):Create(Item, Info, Goal),
+                Tween = TweenService:Create(Item, Info, Goal),
                 Info = Info,
                 Goal = Goal,
                 Item = Item
@@ -3913,9 +4148,8 @@ print("TweenService =", TweenService)
                     assetId = getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".ttf")
                 } }
             }
-            HttpService = HttpService or game:GetService("HttpService")
-           
-			writefile(Library.Folders.Assets .. "/" .. Name .. ".json", HttpService:JSONEncode(FontData))
+
+            writefile(Library.Folders.Assets .. "/" .. Name .. ".json", HttpService:JSONEncode(FontData))
             return Font.new(getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".json"))
         end
 
@@ -3926,7 +4160,7 @@ print("TweenService =", TweenService)
         end
 
         CustomFont:New("Inter", 200, "Regular", {
-            Url = "https://github.com/sametexe001/luas/raw/fonts/InterSemibold.ttf"
+            Url = "https://github.com/sametexe001/luas/raw/refs/heads/main/fonts/InterSemibold.ttf"
         })
 
         Library.Font = CustomFont:Get("Inter")
@@ -4134,7 +4368,7 @@ print("TweenService =", TweenService)
 
             if not Success then
                 Library:Notification({
-                    Name = "cz.hub | Error",
+                    Name = "Valary.gg | Error",
                     Description = "Error caught, please report it in the discord.\n"..Result,
                     Duration = 10,
                 })
@@ -4313,14 +4547,14 @@ print("TweenService =", TweenService)
 
         if Theme == "Accent" and Window then
             Window:SetText(string.format(
-                '<font color="rgb(255,255,255)">cz.</font><font color="rgb(%d,%d,%d)">gg</font> | %s',
+                '<font color="rgb(255,255,255)">valary.</font><font color="rgb(%d,%d,%d)">gg</font> | %s',
                 Color.R*255,
                 Color.G*255,
                 Color.B*255,
                 Game_Name_MarketPlaceService
             ))
 
-            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Color.R*255,Color.G*255,Color.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
+            Watermark:SetText(string.format('<font color="rgb(255,255,255)">valary.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Color.R*255,Color.G*255,Color.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
         end
 
         for _, Item in self.ThemeItems do
@@ -5007,7 +5241,7 @@ print("TweenService =", TweenService)
                     Name = "\0",
                     CornerRadius = UDimNew(0, 5)
                 })
-print("MIDDLE")
+
                 local OptionText = Instances:Create("TextLabel", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -9807,8 +10041,7 @@ print("MIDDLE")
                 Items["Icon"] = Instances:Create("ImageLabel", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
-                    ImageTransparency = 0,
-ImageColor3 = Color3.fromRGB(255,255,255),
+                    ImageTransparency = 0.5,
                     BorderColor3 = FromRGB(0, 0, 0),
                     Size = UDim2New(0, 22, 0, 22),
                     AnchorPoint = Vector2New(0, 0.5),
@@ -9818,7 +10051,7 @@ ImageColor3 = Color3.fromRGB(255,255,255),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
+                })  Items["Icon"]:AddToTheme({ImageColor3 = "Image"})
 
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Inactive"].Instance,
@@ -10007,7 +10240,7 @@ ImageColor3 = Color3.fromRGB(255,255,255),
             TableInsert(Page.Window.Pages, Page)
             return setmetatable(Page, Library.Pages)
         end
-print("LATE")
+
         Library.Pages.SubPage = function(self, Data)
             Data = Data or { }
 
@@ -10088,7 +10321,7 @@ print("LATE")
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
+                })  Items["Icon"]:AddToTheme({ImageColor3 = "Image"})
 
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Inactive"].Instance,
@@ -12055,7 +12288,7 @@ end
 -- Example
 do
     Window = Library:Window({
-        Name = '<font color="rgb(255,255,255)">cz.</font><font color="rgb(236,23,23)">gg</font> | '..Game_Name_MarketPlaceService,
+        Name = '<font color="rgb(255,255,255)">valary.</font><font color="rgb(236,23,23)">gg</font> | '..Game_Name_MarketPlaceService,
         Version = "v1.0.0",
         Logo = "135215559087473",
         FadeSpeed = 0.25,
@@ -12073,8 +12306,8 @@ do
     local Chat_API = {}
 
     Chat_API.URL = "https://yellow-band-8a75.oblockjoycesohiorizz.workers.dev/"
-    
-    local HttpService = game:GetService("HttpService")
+
+    local HttpService = Services.HttpService
 
     function Chat_API.SendMessage(UserId, Message)
         local Response = game:HttpGet(string.format(
@@ -12108,8 +12341,8 @@ do
         ["1096603799159832636"] = ' - <font color="#EC1717">Owner</font>'
     }
     
-    if not isfolder("cz/Assets/Profiles") then
-        makefolder("cz/Assets/Profiles")
+    if not isfolder("valary/Assets/Profiles") then
+        makefolder("valary/Assets/Profiles")
     end
 
     function Chat_API.GetDiscordProfile(Discord_ID)
@@ -12123,11 +12356,11 @@ do
         local avatar = Cached_Data[Discord_ID].avatar
         local ext = avatar.is_animated and ".gif" or ".png"
 
-        if not isfile("cz/Assets/Profiles/"..Discord_ID..ext) then
+        if not isfile("valary/Assets/Profiles/"..Discord_ID..ext) then
             if not avatar.link then
-                writefile("cz/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/czSoftworks/Assets/download.png'))
+                writefile("valary/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/ValarySoftworks/Assets/refs/heads/main/download.png'))
             else
-                writefile("cz/Assets/Profiles/"..Discord_ID..ext, game:HttpGet(avatar.link))
+                writefile("valary/Assets/Profiles/"..Discord_ID..ext, game:HttpGet(avatar.link))
             end
         end
 
@@ -12137,7 +12370,7 @@ do
             Name..=Special_DiscordIDS[Discord_ID]
         end
 
-        return getcustomasset("cz/Assets/Profiles/"..Discord_ID..ext), Name
+        return getcustomasset("valary/Assets/Profiles/"..Discord_ID..ext), Name
     end
 
     task.spawn(function()
@@ -12231,22 +12464,22 @@ do
                         pcall(function()
                             local decoded_user = base64.decode(string.reverse(v.username))
 
-                            if not Config.cz_Users[decoded_user] then
-                                Config.cz_Users[decoded_user] = i
+                            if not Config.Valary_Users[decoded_user] then
+                                Config.Valary_Users[decoded_user] = i
                             end
                         end)
                     end
 
                     local toRemove = {}
 
-                    for username, id in Config.cz_Users do
+                    for username, id in Config.Valary_Users do
                         if not Messages.users.stored[id] then
                             table.insert(toRemove, username)
                         end
                     end
 
                     for _, username in toRemove do
-                        Config.cz_Users[username] = nil
+                        Config.Valary_Users[username] = nil
                     end
 
                     for _, v in pairs(Messages.messages) do
@@ -12334,7 +12567,7 @@ do
 
     task.spawn(LPH_NO_VIRTUALIZE(function()
         while task.wait(1) do
-            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Library.Theme.Accent.R*255,Library.Theme.Accent.G*255,Library.Theme.Accent.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
+            Watermark:SetText(string.format('<font color="rgb(255,255,255)">valary.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Library.Theme.Accent.R*255,Library.Theme.Accent.G*255,Library.Theme.Accent.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
         end
     end))
 
@@ -14074,7 +14307,7 @@ do
                     ManualFarm_Section:Button({Name = "Clean All Filthy Money", Callback = function()
                         if LocalPlayer.stored.FilthyStack.Value == 0 then 
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "You don't have any filthy cash!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14089,7 +14322,7 @@ do
                         
                         if not Cleaner then
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Couldn't find a good cleaner!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14220,7 +14453,7 @@ do
                         if Check then
                             Config:DeleteHiddenScreen()
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Couldn't find the items! Please make sure you have more than $5,000",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14303,7 +14536,7 @@ do
                     local Cooldown = false; Vuln_Section:Button({Name = "Duplicate Current Item", Tooltip = "You need to hold the gun you're trying to dupe.\nIf it doesn't work, retry.", Callback = function()
                         if Cooldown then
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Cooldown! Please wait.",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14320,7 +14553,7 @@ do
 
                         if not Tool then
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Couldn't find your tool! Please make sure you're holding one.",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14378,7 +14611,7 @@ do
 
                         if not Tool and State then
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Couldn't find your tool! Please make sure you're holding one.",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14520,7 +14753,7 @@ do
 
                         if not FORCED then
                             Library:Notification({
-                                Name = "cz.hub | Success",
+                                Name = "Valary.gg | Success",
                                 Description = string.format("Successfully took %s out of your safe!", ToolName),
                                 Duration = 5,
                                 Icon = "116339777575852",
@@ -14528,7 +14761,7 @@ do
                             })
                         else
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = string.format("Couldn't get %s from your safe!", ToolName),
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14575,7 +14808,7 @@ do
 
                         if not FORCED then
                             Library:Notification({
-                                Name = "cz.hub | Success",
+                                Name = "Valary.gg | Success",
                                 Description = string.format("Successfully safed your %s!", Tool),
                                 Duration = 5,
                                 Icon = "116339777575852",
@@ -14583,7 +14816,7 @@ do
                             })
                         else
                             Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = string.format("Couldn't safe your %s!", Tool),
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14624,7 +14857,7 @@ do
                         local Prompt = Workspace:FindFirstChild("GUNS")[self]:FindFirstChildWhichIsA("ProximityPrompt",true);
                         if (Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("GamepassID", true) and not MarketplaceService:UserOwnsGamePassAsync(LocalPlayer.UserId, Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("GamepassID",true).Value)) then 
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "You do not own this gamepass!",
                                 Duration = 7.5,
                                 Icon = "97118059177470",
@@ -14635,7 +14868,7 @@ do
                         local Part = Prompt.Parent:IsA("Part") and Prompt.Parent.CFrame or Prompt.Parent:IsA("MeshPart") and Prompt.Parent.CFrame or Prompt.Parent:IsA("UnionOperation") and Prompt.Parent.CFrame;
                         if LocalPlayer.stored.Money.Value < Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("Price",true).Value then
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = string.format("You are $%s short!", Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("Price",true).Value - LocalPlayer.stored.Money.Value),
                                 Duration = 7.5,
                                 Icon = "97118059177470",
@@ -14663,7 +14896,7 @@ do
                         repeat task.wait(); fireproximityprompt(Prompt); until ItemReceieved == true;
                         
                         Library:Notification({
-                            Name = "cz.hub | Success",
+                            Name = "Valary.gg | Success",
                             Description = "Successfully purchased "..Library.Flags["TheBronx3/SelectItemToPurchase"],
                             Duration = 5,
                             Icon = "116339777575852",
@@ -14767,7 +15000,7 @@ do
                         if not Library.Flags["TheBronx3/VehicleSpawner/SelectVehicle"] then return end
                         if not replicatesignal then
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "Your executor doesnt support 'replicatesignal' , get a better executor!",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14788,7 +15021,7 @@ do
 
                         if LocalPlayer.PlayerGui.GunGui.Holder.Buy.Text:lower() == "buy" then
                             return Library:Notification({
-                                Name = "cz.hub | Error!",
+                                Name = "Valary.gg | Error!",
                                 Description = "You don't own this car!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -15224,7 +15457,7 @@ do
                 
                         if Server.id == game.JobId then
                             Library:Notification({
-                                Name = "cz.hub | Servers",
+                                Name = "Valary.gg | Servers",
                                 Description = "You are currently in the smallest server!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -15381,49 +15614,13 @@ if not UserInputService.TouchEnabled then
     end))
 end
 
-Library.Unload = LPH_NO_VIRTUALIZE(function()
-    -- Disconnect all connections
-    for _, conn in ipairs(Connections or {}) do
-        pcall(function() conn:Disconnect() end)
-    end
-
-    -- Remove drawings
-    pcall(function()
-        FieldOfView:Remove()
-        FieldOfViewOutline:Remove()
-        FieldOfViewFill:Remove()
-        Snapline:Remove()
-        SnaplineOutline:Remove()
-    end)
-
-    -- Remove highlight
-    pcall(function() Target_Highlight:Destroy() end)
-
-    -- Unload ESP
-    pcall(function() Esp.Unload() end)
-
-    -- Reset require hook
-    pcall(function() require = OldRequire or require end)
-
-    -- Final cleanup
-    print("cz.hub | Successfully unloaded")
-    getgenv().cz_loaded = false
-end)
-
--- ==================== LOADER ====================
 Library:Notification({
-    Name = "cz.hub | Loader",
+    Name = "Valary.gg | Loader",
     Description = "loaded in: " .. string.sub(tostring(os.clock() - LoadingTick), 1, 4).. "s",
     Duration = 10
 })
--- Unload Keybind (Press INSERT to unload)
-UserInputService.InputBegan:Connect(function(Input, GameProcessed)
-    if GameProcessed then return end
-    if Input.KeyCode == Enum.KeyCode.Insert then
-        Library:Unload()
-    end
-end)
-print("BEFORE INIT") local ok, err = pcall(function()     Library:Init() end) print("AFTER INIT", ok, err)
+
+Library:Init() -- put this at the end of ur script or the autoload will not work
 
 getgenv().Library = Library
-return Library
+return Library  
