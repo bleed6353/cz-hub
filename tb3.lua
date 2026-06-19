@@ -1515,11 +1515,13 @@ do -- FrameWork
             end
         end))
 
-       local Set_Spectate = false
+local Set_Spectate = false
 
--- Safer WalkSpeed (Velocity Method - Best for Tha Bronx 3)
+-- Stealth WalkSpeed for Tha Bronx 3 (Best current method)
+local SpeedConnection = nil
+
 RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
-    -- === WALKSPEED ===
+    -- === STEALTH WALKSPEED ===
     if Config.MiscSettings.ModifySpeed.Enabled then
         local char = LocalPlayer.Character
         if char then
@@ -1527,32 +1529,63 @@ RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
             local root = char:FindFirstChild("HumanoidRootPart")
             
             if hum and root then
-                hum.WalkSpeed = 16   -- Fake normal speed (anti-detection)
+                hum.WalkSpeed = 16  -- Keep real walkspeed normal
                 
                 local moveDir = hum.MoveDirection
                 if moveDir.Magnitude > 0 then
                     local speed = Config.MiscSettings.ModifySpeed.Value
                     
-                    local currentVel = root.Velocity
-                    root.Velocity = Vector3.new(
-                        moveDir.X * speed,
-                        currentVel.Y,
-                        moveDir.Z * speed
-                    )
+                    -- Very stealthy method using BodyVelocity
+                    if not root:FindFirstChild("CzSpeedVelocity") then
+                        local bv = Instance.new("BodyVelocity")
+                        bv.Name = "CzSpeedVelocity"
+                        bv.MaxForce = Vector3.new(10000, 0, 10000)
+                        bv.Velocity = Vector3.new(0,0,0)
+                        bv.Parent = root
+                    end
+                    
+                    local bv = root:FindFirstChild("CzSpeedVelocity")
+                    if bv then
+                        bv.Velocity = Vector3.new(moveDir.X * speed, 0, moveDir.Z * speed)
+                    end
+                else
+                    local bv = root:FindFirstChild("CzSpeedVelocity")
+                    if bv then bv.Velocity = Vector3.new(0,0,0) end
                 end
             end
         end
     else
-        -- Normal speed when turned off
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-            LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+        -- Clean up when disabled
+        if LocalPlayer.Character then
+            local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if root then
+                local bv = root:FindFirstChild("CzSpeedVelocity")
+                if bv then bv:Destroy() end
+            end
+            
+            if LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+            end
         end
     end
 
-    -- === SPECTATE PLAYER (DO NOT TOUCH) ===
+    -- === SPECTATE (unchanged) ===
     if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
         Set_Spectate = false
         local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
+
+        if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid") then
+            Subject = LocalPlayer.Character.Humanoid
+        end
+
+        Camera.CameraSubject = Subject
+    else
+        if not Set_Spectate then
+            Set_Spectate = true
+            Camera.CameraSubject = LocalPlayer.Character.Humanoid
+        end
+    end
+end))
 
         if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid") then
             Subject = LocalPlayer.Character.Humanoid
