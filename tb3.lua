@@ -1,15 +1,20 @@
-if LPH_OBFUSCATED == nil then
-    local assert = assert
-    local type = type
-    local setfenv = setfenv
-    LPH_ENCNUM = function(toEncrypt, ...)
-        assert(type(toEncrypt) == "number" and #{...} == 0, "LPH_ENCNUM only accepts a single constant double or integer as an argument.")
-        return toEncrypt
-    end
-    LPH_NUMENC = LPH_ENCNUM
-    LPH_ENCSTR = function(toEncrypt, ...)
-        assert(type(toEncrypt) == "string" and #{...} == 0, "LPH_ENCSTR only accepts a single constant string as an argument.")
-        return toEncrypt
+-- ====================== LOCAL PLAYER MODIFICATIONS ======================
+local LocalPlayerSection = MainSection:Section({Name = "Local Player Modifications", Icon = Library:GetImage("Player"), Side = 1})
+
+LocalPlayerSection:Button({
+    Name = "Local Player",
+    Tooltip = "Toggle ALL Local Player cheats (Infinite Sleep, Hunger, Stamina, Auto Pickup, Instant Interact, etc.)",
+    Callback = function()
+        Config.The_Bronx.PlayerModifications.InfiniteSleep = not Config.The_Bronx.PlayerModifications.InfiniteSleep
+        Config.The_Bronx.PlayerModifications.InfiniteHunger = not Config.The_Bronx.PlayerModifications.InfiniteHunger
+        Config.The_Bronx.PlayerModifications.InfiniteStamina = not Config.The_Bronx.PlayerModifications.InfiniteStamina
+        Config.The_Bronx.PlayerModifications.InstantInteract = not Config.The_Bronx.PlayerModifications.InstantInteract
+        Config.The_Bronx.PlayerModifications.InstantRevive = not Config.The_Bronx.PlayerModifications.InstantRevive
+        Config.The_Bronx.PlayerModifications.AutoPickupCash = not Config.The_Bronx.PlayerModifications.AutoPickupCash
+        Config.The_Bronx.PlayerModifications.AutoPickupBags = not Config.The_Bronx.PlayerModifications.AutoPickupBags
+        Config.The_Bronx.PlayerModifications.DisableCameraBobbing = not Config.The_Bronx.PlayerModifications.DisableCameraBobbing
+        Config.The_Bronx.PlayerModifications.DisableBloodEffects = not Config.The_Bronx.PlayerModifications.DisableBloodEffects
+        Config.The_Bronx.PlayerModifications.Bypass
     end
     LPH_STRENC = LPH_ENCSTR
     LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
