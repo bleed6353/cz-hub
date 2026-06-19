@@ -15681,7 +15681,38 @@ Library:Notification({
     Description = "loaded in: " .. string.sub(tostring(os.clock() - LoadingTick), 1, 4).. "s",
     Duration = 10
 })
-
+-- === STEALTH WALKSPEED (Add this at the bottom) ===
+RunService:BindToRenderStep("StealthSpeed", 390, LPH_NO_VIRTUALIZE(function()
+    if Config.MiscSettings.ModifySpeed.Enabled then
+        local char = LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChild("Humanoid")
+            local root = char:FindFirstChild("HumanoidRootPart")
+            
+            if hum and root then
+                hum.WalkSpeed = 16
+                
+                local moveDir = hum.MoveDirection
+                if moveDir.Magnitude > 0 then
+                    local speed = Config.MiscSettings.ModifySpeed.Value
+                    
+                    if not root:FindFirstChild("CzStealthVel") then
+                        local bv = Instance.new("BodyVelocity")
+                        bv.Name = "CzStealthVel"
+                        bv.MaxForce = Vector3.new(4000, 0, 4000)
+                        bv.Velocity = Vector3.new(0,0,0)
+                        bv.Parent = root
+                    end
+                    
+                    local bv = root:FindFirstChild("CzStealthVel")
+                    if bv then
+                        bv.Velocity = Vector3.new(moveDir.X * speed, 0, moveDir.Z * speed)
+                    end
+                end
+            end
+        end
+    end
+end))
 Library:Init() -- put this at the end of ur script or the autoload will not work
 
 getgenv().Library = Library
