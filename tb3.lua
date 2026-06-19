@@ -47,7 +47,7 @@ local Services = setmetatable({}, {
 for Index, Value in getconnections(gethui().ChildRemoved) do
     Value:Disable()
 end
-
+print("TOP")
 local Config = {
     ["Gun_Handle"] = nil;
     ["cz_Users"] = {};
@@ -5001,7 +5001,7 @@ print("cz.hub | Services loaded")
                     Name = "\0",
                     CornerRadius = UDimNew(0, 5)
                 })
-
+print("MIDDLE")
                 local OptionText = Instances:Create("TextLabel", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -10001,7 +10001,7 @@ ImageColor3 = Color3.fromRGB(255,255,255),
             TableInsert(Page.Window.Pages, Page)
             return setmetatable(Page, Library.Pages)
         end
-
+print("LATE")
         Library.Pages.SubPage = function(self, Data)
             Data = Data or { }
 
@@ -15417,7 +15417,7 @@ UserInputService.InputBegan:Connect(function(Input, GameProcessed)
         Library:Unload()
     end
 end)
-Library:Init()
+print("BEFORE INIT") local ok, err = pcall(function()     Library:Init() end) print("AFTER INIT", ok, err)
 
 getgenv().Library = Library
 return Library
