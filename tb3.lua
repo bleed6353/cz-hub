@@ -1,94 +1,31 @@
-LPH_STRENC = LPH_ENCSTR
-LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
-        assert(type(toEncrypt) == "function" and type(encKey) == "string" and #{...} == 0, "LPH_ENCFUNC accepts a constant function, constant string, and string variable as arguments.")
-        return toEncrypt
+local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
+
+LocalCharacterSection:Button({
+    Name = "Local Character",
+    Tooltip = "Modify WalkSpeed, JumpPower, Click Teleport, No-Clip",
+    Callback = function()
+        Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
+        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
+        Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
     end
-    LPH_FUNCENC = LPH_ENCFUNC
-    LPH_JIT = function(f, ...)
-        assert(type(f) == "function" and #{...} == 0, "LPH_JIT only accepts a single constant function as an argument.")
-        return f
-    end
-    LPH_JIT_MAX = LPH_JIT
-    LPH_NO_VIRTUALIZE = function(f, ...)
-        assert(type(f) == "function" and #{...} == 0, "LPH_NO_VIRTUALIZE only accepts a single constant function as an argument.")
-        return f
-    end
-    LPH_NO_UPVALUES = function(f, ...)
-        assert(type(setfenv) == "function", "LPH_NO_UPVALUES can only be used on Lua versions with getfenv & setfenv")
-        assert(type(f) == "function" and #{...} == 0, "LPH_NO_UPVALUES only accepts a single constant function as an argument.")
-        local env = getrenv()
-        return setfenv(
-            LPH_NO_VIRTUALIZE(function(...){
-                return func(...)
-            end),
-            setmetatable(
-                {
-                    func = f
-                },
-                {
-                    __index = env,
-                    __newindex = env
-                }
-            )
-        )
-    end
-    LPH_CRASH = function(...)
-        assert(#{...} == 0, "LPH_CRASH does not accept any arguments.")
-        game:Shutdown()
-        while true do end
-    end
-    LRM_IsUserPremium = false
-    LRM_LinkedDiscordID = "1096603799159832636"
-    LRM_ScriptName = "cz_hub"
-    LRM_TotalExecutions = 0
-    LRM_SecondsLeft = math.huge
-    LRM_UserNote = "Developer";
-    end
-    LRM_IsUserPremium = false
-    LRM_LinkedDiscordID = "1096603799159832636"
-    LRM_ScriptName = "cz_hub"
-    LRM_TotalExecutions = 0
-    LRM_SecondsLeft = math.huge
-    LRM_UserNote = "Developer";
-end;
-
-local Window, Watermark;
-
-if getgenv().czhub_loaded then
-    return
-end
-
-getgenv().czhub_loaded = true
-
-local LoadingTick = os.clock()
-
-local gethui = gethui or function()
-    return game.CoreGui
-end
-
-hookfunction(isfunctionhooked, function()
-    return false
-end)
-
-local Library = {Friendly_Players = {}, Priority_Players = {}, Selected_Player = nil}
-
-local Volcano = string.find(getexecutorname():lower(), "volcano") ~= nil
-
-local Services = setmetatable({}, {
-    __index = LPH_NO_VIRTUALIZE(function(self, service, key) 
-        return (cloneref ~= nil) and cloneref(game:GetService(service)) or game:GetService(service)
-    end)
 })
 
-for Index, Value in getconnections(gethui().ChildRemoved) do
-    Value:Disable()
-end
+-- Local Character Modifications
+local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
 
-local Config = {
-    ["Gun_Handle"] = nil;
-    ["cz_hub_Users"] = {};
+LocalCharacterSection:Button({
+    Name = "Local Character",
+    Tooltip = "Modify WalkSpeed, JumpPower, Click Teleport, No-Clip",
+    Callback = function()
+        Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
+        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
+        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
+        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
 
-    Tracers = {
+        Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
+    end
+})
+})
         Enabled = false;
         Duration = 3;
         StartColor = Color3.fromRGB(255, 85, 0);
