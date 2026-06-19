@@ -15406,7 +15406,13 @@ Library:Notification({
     Description = "loaded in: " .. string.sub(tostring(os.clock() - LoadingTick), 1, 4).. "s",
     Duration = 10
 })
-
+-- Unload Keybind (Press INSERT to unload)
+UserInputService.InputBegan:Connect(function(Input, GameProcessed)
+    if GameProcessed then return end
+    if Input.KeyCode == Enum.KeyCode.Insert then
+        Library:Unload()
+    end
+end)
 Library:Init()
 
 getgenv().Library = Library
