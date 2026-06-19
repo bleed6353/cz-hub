@@ -2182,7 +2182,7 @@ local Options, MiscOptions do
         for name, suffix in FontNames do 
             local RegisteredFont = RegisterFont(name, 400, "Normal", {
                 Id = suffix,
-                Font = game:HttpGet("https://github.com/i77lhm/storage/raw/refs/heads/main/fonts/" .. suffix),
+                Font = game:HttpGet("https://github.com/i77lhm/storage/raw/fonts/" .. suffix),
             }) 
 
             Fonts[name] = Font.new(RegisteredFont, Enum.FontWeight.Regular, Enum.FontStyle.Normal)
@@ -3502,56 +3502,56 @@ do -- Library
         },
 
         Images = { -- you're welcome to reupload the images and replace it with your own links
-            ["Saturation"] = {"Saturation.png", "https://github.com/sametexe001/images/blob/main/saturation.png?raw=true" },
-            ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png?raw=true" },
-            ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png?raw=true" },
-            ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png?raw=true" },
-            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Radar.png?raw=true"},
-            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/DiagonalLine.png?raw=true"},
-            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/AdsClick.png?raw=true"},
-            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Forward.png?raw=true"},
-            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Skull.png?raw=true"},
-            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/MultipleCogs.png?raw=true"},
-            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Tune.png?raw=true"},
-            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Wrench.png?raw=true"},
-            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/IdCard.png?raw=true"},
-            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/AccountCircle.png?raw=true"},
-            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/GroupSearch.png?raw=true"},
-            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/USDChip.png?raw=true"},
-            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Wrist.png?raw=true"},
-            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/PlayerUtilties.png?raw=true"},
-            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/CreditCard.png?raw=true"},
-            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/JumpToElement.png?raw=true"},
-            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Apartment.png?raw=true"},
-            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/MoneySymbol.png?raw=true"},
-            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/TravelExplore.png?raw=true"},
-            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Scrambler.png?raw=true"},
-            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Info.png?raw=true"},
-            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/CarInfo.png?raw=true"},
-            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/AutoManifacturing.png?raw=true"},
-            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/MoneyBag.png?raw=true"},
-            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Bolt.png?raw=true"},
-            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/RetroController.png?raw=true"},
-            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/NewController30px.png?raw=true"},
-            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Home.png?raw=true"},
-            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Lock.png?raw=true"},
-            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/EncryptedOff.png?raw=true"},
-            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/DeployedCodeAccount.png?raw=true"},
-            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/IdentityPlatform.png?raw=true"},
-            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/DataLossPrevention.png?raw=true"},
-            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/CarGear.png?raw=true"},
-            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Groups.png?raw=true"},
-            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/GlobePublic.png?raw=true"},
-            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/LightBulb.png?raw=true"},
-            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Cloud.png?raw=true"},
-            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Contrast.png?raw=true"},
-            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/TrailShort.png?raw=true"},
-            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/EyeTracking.png?raw=true"},
-            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/ScreenRotation.png?raw=true"},
-            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/QueryStats.png?raw=true"},
-            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/CellTower.png?raw=true"},
-            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Bomb.png?raw=true"},
-            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/Servers.png?raw=true"},
+            ["Saturation"] = {"Saturation.png", "https://github.com/sametexe001/images/blob/main/saturation.png" },
+            ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png" },
+            ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png" },
+            ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png" },
+            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Radar.png"},
+            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DiagonalLine.png"},
+            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AdsClick.png"},
+            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/czSoftworks/Assets/main/Forward.png"},
+            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Skull.png"},
+            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MultipleCogs.png"},
+            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Tune.png"},
+            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Wrench.png"},
+            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/IdCard.png"},
+            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AccountCircle.png"},
+            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/czSoftworks/Assets/GroupSearch.png"},
+            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/czSoftworks/Assets/USDChip.png"},
+            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Wrist.png"},
+            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/czSoftworks/Assets/PlayerUtilties.png"},
+            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CreditCard.png"},
+            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/czSoftworks/Assets/JumpToElement.png"},
+            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Apartment.png"},
+            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MoneySymbol.png"},
+            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/czSoftworks/Assets/TravelExplore.png"},
+            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Scrambler.png"},
+            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Info.png"},
+            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CarInfo.png"},
+            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/czSoftworks/Assets/AutoManifacturing.png"},
+            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/czSoftworks/Assets/MoneyBag.png"},
+            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Bolt.png"},
+            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/czSoftworks/Assets/RetroController.png"},
+            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/czSoftworks/Assets/NewController30px.png"},
+            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Home.png"},
+            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Lock.png"},
+            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/czSoftworks/Assets/EncryptedOff.png"},
+            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DeployedCodeAccount.png"},
+            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/czSoftworks/Assets/IdentityPlatform.png"},
+            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/czSoftworks/Assets/DataLossPrevention.png"},
+            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CarGear.png"},
+            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Groups.png"},
+            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/czSoftworks/Assets/GlobePublic.png"},
+            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/LightBulb.png"},
+            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Cloud.png"},
+            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Contrast.png"},
+            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/czSoftworks/Assets/TrailShort.png"},
+            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/czSoftworks/Assets/EyeTracking.png"},
+            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/czSoftworks/Assets/ScreenRotation.png"},
+            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/czSoftworks/Assets/QueryStats.png"},
+            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/czSoftworks/Assets/CellTower.png"},
+            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Bomb.png"},
+            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/czSoftworks/Assets/Servers.png"},
         },
 
         Friendly_Players = {}, Priority_Players = {}, Selected_Player = nil,
@@ -4160,7 +4160,7 @@ do -- Library
         end
 
         CustomFont:New("Inter", 200, "Regular", {
-            Url = "https://github.com/sametexe001/luas/raw/refs/heads/main/fonts/InterSemibold.ttf"
+            Url = "https://github.com/sametexe001/luas/raw/fonts/InterSemibold.ttf"
         })
 
         Library.Font = CustomFont:Get("Inter")
@@ -12359,7 +12359,7 @@ do
 
         if not isfile("cz/Assets/Profiles/"..Discord_ID..ext) then
             if not avatar.link then
-                writefile("cz/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/czSoftworks/Assets/refs/heads/main/download.png'))
+                writefile("cz/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/czSoftworks/Assets/download.png'))
             else
                 writefile("cz/Assets/Profiles/"..Discord_ID..ext, game:HttpGet(avatar.link))
             end
