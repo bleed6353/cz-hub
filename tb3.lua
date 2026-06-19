@@ -296,7 +296,7 @@ for Index, Value in LocalPlayer.Character:GetDescendants() do
     end)
 end
 
-local Target_Highlight = Instance.new("Highlight", Services.CoreGui)
+local Target_Highlight = Instance.new("Highlight", CoreGui)
 
 Target_Highlight.FillColor = Config.FieldOfView.HightlightFillColor
 Target_Highlight.OutlineColor = Color3.new(1,1,1)
@@ -683,18 +683,14 @@ do -- FrameWork
         CheckPlayer(Value)
     end
     
-   local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
-    if Device_Mobile then
-        Config.TargetSelector.Targetting = Config.Silent.Enabled
-    end
-
-    if not Config.TargetSelector.Targetting then
+  local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
+    if not Config.Silent.Enabled then
         Target = nil
         return nil
     end
 
     local ClosestPlayer, ClosestDistance = nil, math.huge
-    local MousePos = Device_Mobile and Center_Of_Screen or UserInputService:GetMouseLocation()
+    local MousePos = UserInputService:GetMouseLocation()
     local Radius = Config.TargetSelector.UseFOV and Config.FieldOfView.Radius or 9e9
 
     for _, Player in ipairs(Players:GetPlayers()) do
@@ -712,14 +708,6 @@ do -- FrameWork
 
         local Distance = (Vector2.new(ScreenPos.X, ScreenPos.Y) - MousePos).Magnitude
         if Distance > Radius then continue end
-
-        -- Checks
-        if Config.TargetSelector.VisibleCheck and not Config.Silent.WallBang and not WallCheck(Character) then 
-            continue 
-        end
-        if Config.TargetSelector.HealthCheck and Humanoid.Health < Config.TargetSelector.Health then continue end
-        if Config.TargetSelector.FriendCheck and table.find(Friends, Player.Name) then continue end
-        if Config.TargetSelector.LimitDistance and not DistanceCheck(Player, Config.TargetSelector.MaxDistance) then continue end
 
         if Distance < ClosestDistance then
             ClosestDistance = Distance
@@ -3171,15 +3159,32 @@ end
 
 do -- Library
     -- Services
-    local Players = game:GetService("Players")
-    local UserInputService = game:GetService("UserInputService")
-    local HttpService = game:GetService("HttpService")
-    local TweenService = game:GetService("TweenService")
-    local RunService = game:GetService("RunService")
-    local Workspace = game:GetService("Workspace")
-    local SoundService = cloneref and cloneref(game:GetService("SoundService")) or game:GetService("SoundService")
-    local CoreGui = cloneref and cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui")
+    -- ==================== FIXED SERVICES ====================
+local Players = Services.Players
+local ReplicatedStorage = Services.ReplicatedStorage
+local UserInputService = Services.UserInputService
+local Workspace = Services.Workspace
+local RunService = Services.RunService
 
+local Heartbeat = RunService.Heartbeat
+local RenderStepped = RunService.RenderStepped
+
+local ProximityPromptService = Services.ProximityPromptService
+local MarketplaceService = Services.MarketplaceService
+local StarterGui = Services.StarterGui
+local VirtualInputManager = Services.VirtualInputManager
+local Lighting = Services.Lighting
+local Debris = Services.Debris
+
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+-- Fix CoreGui
+local CoreGui = gethui() or Services.CoreGui or game:GetService("CoreGui")
+
+local Connections = {}
+
+print("cz.hub | Services loaded")
     -- Variables
     local LocalPlayer = Players.LocalPlayer
     local Camera = Workspace.CurrentCamera
