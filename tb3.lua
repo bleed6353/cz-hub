@@ -1515,15 +1515,48 @@ do -- FrameWork
             end
         end))
 
-        local Set_Speed = false; local Set_Spectate = false; RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function(Delta)
+               local Set_Spectate = false
+
+        -- Stealth WalkSpeed (Fixed)
+        RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
             if Config.MiscSettings.ModifySpeed.Enabled then
-                Set_Speed = false
-                
-                LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Config.MiscSettings.ModifySpeed.Value
+                local char = LocalPlayer.Character
+                if char then
+                    local hum = char:FindFirstChild("Humanoid")
+                    local root = char:FindFirstChild("HumanoidRootPart")
+                    
+                    if hum and root then
+                        hum.WalkSpeed = 16
+                        
+                        local moveDir = hum.MoveDirection
+                        if moveDir.Magnitude > 0 then
+                            local speed = Config.MiscSettings.ModifySpeed.Value
+                            
+                            if not root:FindFirstChild("CzSpeedVelocity") then
+                                local bv = Instance.new("BodyVelocity")
+                                bv.Name = "CzSpeedVelocity"
+                                bv.MaxForce = Vector3.new(4000, 0, 4000)
+                                bv.Velocity = Vector3.new(0,0,0)
+                                bv.Parent = root
+                            end
+                            
+                            local bv = root:FindFirstChild("CzSpeedVelocity")
+                            if bv then
+                                bv.Velocity = Vector3.new(moveDir.X * speed, 0, moveDir.Z * speed)
+                            end
+                        end
+                    end
+                end
             else
-                if not Set_Speed then
-                    Set_Speed = true;
-                    LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+                if LocalPlayer.Character then
+                    local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if root then
+                        local bv = root:FindFirstChild("CzSpeedVelocity")
+                        if bv then bv:Destroy() end
+                    end
+                    if LocalPlayer.Character:FindFirstChild("Humanoid") then
+                        LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+                    end
                 end
             end
 
@@ -1539,6 +1572,10 @@ do -- FrameWork
             else
                 if not Set_Spectate then
                     Set_Spectate = true
+                    Camera.CameraSubject = LocalPlayer.Character.Humanoid
+                end
+            end
+        end))
 
                     Camera.CameraSubject = LocalPlayer.Character.Humanoid
                 end
