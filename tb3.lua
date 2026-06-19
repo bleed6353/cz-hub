@@ -3909,8 +3909,9 @@ print("cz.hub | Services loaded")
                     assetId = getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".ttf")
                 } }
             }
-
-            writefile(Library.Folders.Assets .. "/" .. Name .. ".json", HttpService:JSONEncode(FontData))
+            HttpService = HttpService or game:GetService("HttpService")
+           
+			writefile(Library.Folders.Assets .. "/" .. Name .. ".json", HttpService:JSONEncode(FontData))
             return Font.new(getcustomasset(Library.Folders.Assets .. "/" .. Name .. ".json"))
         end
 
