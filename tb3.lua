@@ -1,55 +1,13 @@
-if LPH_OBFUSCATED == nil then
-    local assert = assert
-    local type = type
-    local setfenv = setfenv
-    LPH_ENCNUM = function(toEncrypt, ...)
-        assert(type(toEncrypt) == "number" and #{...} == 0, "LPH_ENCNUM only accepts a single constant double or integer as an argument.")
-        return toEncrypt
-    end
-    LPH_NUMENC = LPH_ENCNUM
-    LPH_ENCSTR = function(toEncrypt, ...)
-        assert(type(toEncrypt) == "string" and #{...} == 0, "LPH_ENCSTR only accepts a single constant string as an argument.")
-        return toEncrypt
-    end
-    LPH_STRENC = LPH_ENCSTR
-    LPH_ENCFUNC = function(toEncrypt, encKey, decKey, ...)
-        
-        assert(type(toEncrypt) == "function" and type(encKey) == "string" and #{...} == 0, "LPH_ENCFUNC accepts a constant function, constant string, and string variable as arguments.")
-        return toEncrypt
-    end
-    LPH_FUNCENC = LPH_ENCFUNC
-    LPH_JIT = function(f, ...)
-        assert(type(f) == "function" and #{...} == 0, "LPH_JIT only accepts a single constant function as an argument.")
-        return f
-    end
-    LPH_JIT_MAX = LPH_JIT
-    LPH_NO_VIRTUALIZE = function(f, ...)
-        assert(type(f) == "function" and #{...} == 0, "LPH_NO_VIRTUALIZE only accepts a single constant function as an argument.")
-        return f
-    end
-    LPH_NO_UPVALUES = function(f, ...)
-        assert(type(setfenv) == "function", "LPH_NO_UPVALUES can only be used on Lua versions with getfenv & setfenv")
-        assert(type(f) == "function" and #{...} == 0, "LPH_NO_UPVALUES only accepts a single constant function as an argument.")
-        local env = getrenv()
-        return setfenv(
-            LPH_NO_VIRTUALIZE(function(...)
-                return func(...)
-            end),
-            setmetatable(
-                {
-                    func = f
-                },
-                {
-                    __index = env,
-                    __newindex = env
-                }
-            )
-        )
-    end
-    LPH_CRASH = function(...)
-        assert(#{...} == 0, "LPH_CRASH does not accept any arguments.")
-        game:Shutdown()
-        while true do end
+if not LPH_OBFUSCATED then
+    local function identity(x) return x end
+    LPH_ENCNUM = identity; LPH_NUMENC = identity
+    LPH_ENCSTR = identity; LPH_STRENC = identity
+    LPH_ENCFUNC = identity; LPH_FUNCENC = identity
+    LPH_JIT = identity; LPH_JIT_MAX = identity
+    LPH_NO_VIRTUALIZE = identity
+    LPH_NO_UPVALUES = identity
+    LPH_CRASH = function() end
+end
     end
     LRM_IsUserPremium = false
     LRM_LinkedDiscordID = "1096603799159832636"
@@ -303,6 +261,10 @@ local ReplicatedStorage = Services.ReplicatedStorage;
 local UserInputService = Services.UserInputService;
 local Workspace = Services.Workspace;
 local RunService = Services.RunService;
+local Heartbeat = RunService.Heartbeat;           -- Add
+local RenderStepped = RunService.RenderStepped;   -- Add
+local Stepped = RunService.Stepped;               -- Add
+
 local ProximityPromptService = Services.ProximityPromptService;
 local MarketplaceService = Services.MarketplaceService;
 local StarterGui = Services.StarterGui
@@ -721,62 +683,53 @@ do -- FrameWork
         CheckPlayer(Value)
     end
     
-    local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
-        if Device_Mobile then
-            Config.TargetSelector.Targetting = Config.Silent.Enabled
+   local GetSelectedTarget = LPH_NO_VIRTUALIZE(function()
+    if Device_Mobile then
+        Config.TargetSelector.Targetting = Config.Silent.Enabled
+    end
+
+    if not Config.TargetSelector.Targetting then
+        Target = nil
+        return nil
+    end
+
+    local ClosestPlayer, ClosestDistance = nil, math.huge
+    local MousePos = Device_Mobile and Center_Of_Screen or UserInputService:GetMouseLocation()
+    local Radius = Config.TargetSelector.UseFOV and Config.FieldOfView.Radius or 9e9
+
+    for _, Player in ipairs(Players:GetPlayers()) do
+        if Player == LocalPlayer then continue end
+        if table.find(Library.Friendly_Players, Player.Name) then continue end
+
+        local Character = Player.Character
+        if not Character or not Character:FindFirstChild("Head") then continue end
+
+        local Humanoid = Character:FindFirstChild("Humanoid")
+        if not Humanoid or Humanoid.Health <= 0 then continue end
+
+        local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Character.Head.Position)
+        if not OnScreen then continue end
+
+        local Distance = (Vector2.new(ScreenPos.X, ScreenPos.Y) - MousePos).Magnitude
+        if Distance > Radius then continue end
+
+        -- Checks
+        if Config.TargetSelector.VisibleCheck and not Config.Silent.WallBang and not WallCheck(Character) then 
+            continue 
         end
+        if Config.TargetSelector.HealthCheck and Humanoid.Health < Config.TargetSelector.Health then continue end
+        if Config.TargetSelector.FriendCheck and table.find(Friends, Player.Name) then continue end
+        if Config.TargetSelector.LimitDistance and not DistanceCheck(Player, Config.TargetSelector.MaxDistance) then continue end
 
-        if not Config.TargetSelector.Targetting then
-            Target = nil
-            return nil
+        if Distance < ClosestDistance then
+            ClosestDistance = Distance
+            ClosestPlayer = Player
         end
-    
-        local PlayersList = Players:GetPlayers()
-        local MouseLocation = Device_Mobile and Center_Of_Screen or Vector2.new(Mouse.X, Mouse.Y)
-        local Radius = Config.TargetSelector.UseFOV and Config.FieldOfView.Radius or math.huge
-    
-        local ClosestPlayer = nil
-        local ClosestDistance = math.huge
-    
-        for _, Player in ipairs(PlayersList) do
-            if Player == LocalPlayer then continue end
-            if table.find(Library.Friendly_Players, Player.Name) then continue end
-    
-            local Character = Player.Character
-            if not Character then continue end
-    
-            local Humanoid = Character:FindFirstChild("Humanoid")
-            local Head = Character:FindFirstChild("Head")
-    
-            if not Humanoid or not Head then continue end
-    
-            local ScreenPos, OnScreen = Camera:WorldToScreenPoint(Head.Position)
-            if not OnScreen then continue end
-    
-            local Distance = (Vector2.new(ScreenPos.X, ScreenPos.Y) - MouseLocation).Magnitude
-            if Distance > Radius then continue end
+    end
 
-            local IsVisible = true
-            if Config.TargetSelector.VisibleCheck and not Config.Silent.WallBang then
-                IsVisible = WallCheck(Character)
-                if not IsVisible then continue end
-            end
-
-            if Config.TargetSelector.HealthCheck and Humanoid.Health < Config.TargetSelector.Health then continue end
-            if Config.TargetSelector.FriendCheck and table.find(Friends, Player.Name) then continue end
-            if Config.TargetSelector.LimitDistance and not DistanceCheck(Player, Config.TargetSelector.MaxDistance) then continue end
-            --if library.get_priority(Player) == "Friendly" then continue end
-    
-            if Distance < ClosestDistance then
-                ClosestDistance = Distance
-                ClosestPlayer = Player
-            end
-        end
-    
-        Target = ClosestPlayer
-        return Target
-    end)
-
+    Target = ClosestPlayer
+    return Target
+end)
     local FindFirstChild = Workspace.FindFirstChild
     local Tracer_Delay = false
 
@@ -864,55 +817,47 @@ do -- FrameWork
         end)
     end)
 
-    __namecall_hook = nil; __namecall_hook = hookmetamethod(Workspace, "__namecall", LPH_NO_VIRTUALIZE(function(Self, ...)
-        local Arguments = {...}
-        local Method = getnamecallmethod()
-        
-        if Method == "FireServer" then
-            if Self == ReplicatedStorage.InflictTarget and not checkcaller() then
-                task.spawn(Config.PlaySound)
-            end 
-        end 
+    local OldNamecall
+OldNamecall = hookmetamethod(game, "__namecall", LPH_NO_VIRTUALIZE(function(Self, ...)
+    local Args = {...}
+    local Method = getnamecallmethod()
 
-        if string.find(string.lower(Method), 'findpartonray') then
-            local cs = getcallingscript()
+    -- Hit Sound
+    if Method == "FireServer" and Self == ReplicatedStorage.InflictTarget and not checkcaller() then
+        task.spawn(Config.PlaySound)
+    end
 
-            if checkcaller() or string.find(cs.Name, "CameraModule") then
-                return __namecall_hook(Self, unpack(Arguments))
+    -- Silent Aim + Tracers
+    if (Method == "FindPartOnRay" or Method == "findPartOnRay") then
+        if Config.Silent.Enabled and Target and Target.Character then
+            if math.random(1, 100) > Config.Silent.HitChance then
+                return OldNamecall(Self, ...)
             end
 
-            if Config.Silent.Enabled then
-                if not (math.random(0, 100) <= Config.Silent.HitChance) then
-                    return __namecall_hook(Self, ...)
+            local HitPartName = Config.Silent.HitParts[math.random(#Config.Silent.HitParts)] or "Head"
+            local HitPart = Target.Character:FindFirstChild(HitPartName)
+
+            if HitPart then
+                local Origin = Args[1].Origin
+                local Direction = (HitPart.Position - Origin).Unit * 10000
+
+                Args[1] = Ray.new(Origin, Direction)
+
+                if Config.Tracers.Enabled then
+                    task.spawn(Config.Tracer, HitPart.Position)
                 end
 
-                if Target and Target.Character then
-                    local TargetPart = FindFirstChild(Target.Character, Config.Silent.HitParts[1] and Config.Silent.HitParts[math.random(1, #Config.Silent.HitParts)] or "Head")
-                    if TargetPart then
-                        local Origin = Arguments[1].Origin;
-
-                        local Direction = (TargetPart.Position - Origin).Unit * 9e17;
-
-                        Arguments[1] = Ray.new(Origin, Direction)
-
-                        if Config.Silent.WallBang then
-                            if Config.Tracers.Enabled then
-                                task.spawn(Config.Tracer, TargetPart.Position)
-                            end
-
-                            return TargetPart, TargetPart.Position, Vector3.new(0,0,0)
-                        end
-                    end
+                if Config.Silent.WallBang then
+                    return HitPart, HitPart.Position, Vector3.zero
                 end
             end
-
-            if Config.Tracers.Enabled then
-                task.spawn(Config.Tracer, Arguments[1].Origin + Arguments[1].Direction)
-            end
+        elseif Config.Tracers.Enabled then
+            task.spawn(Config.Tracer, Args[1].Origin + Args[1].Direction)
         end
+    end
 
-        return __namecall_hook(Self, unpack(Arguments))
-    end))
+    return OldNamecall(Self, unpack(Args))
+end))
 
     local OldLightingSettings = {}
 
@@ -1693,7 +1638,7 @@ do -- FrameWork
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                task.wait(0)
+                Heartbeat:Wait()
                 if Config.VehicleModifications.SpeedEnabled and UserInputService:IsKeyDown(Enum.KeyCode.W) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1712,7 +1657,7 @@ do -- FrameWork
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                task.wait(0)
+                Heartbeat:Wait()
                 if Config.VehicleModifications.BreakEnabled and UserInputService:IsKeyDown(Enum.KeyCode.S) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1731,7 +1676,7 @@ do -- FrameWork
 
         task.spawn(LPH_NO_VIRTUALIZE(function()
             while true do
-                task.wait(0)
+                Heartbeat:Wait()
                 if Config.VehicleModifications.InstantStop and UserInputService:IsKeyDown(Config.VehicleModifications.InstantStopBind) then
                     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                         if LocalPlayer.Character and typeof(LocalPlayer.Character) == "Instance" then
@@ -1750,277 +1695,84 @@ do -- FrameWork
         end))
     --
 
-    -- Weapon Modifications
-        do
-            local OldWeaponValues = {}
+    local OldRequire = require
+require = LPH_NO_VIRTUALIZE(function(obj)
+    if typeof(obj) == "Instance" and obj.Name == "Setting" then
+        local success, config = pcall(OldRequire, obj)
+        if not success then return {} end
 
-            local GetAllTools = LPH_NO_VIRTUALIZE(function(LocalToolsOnly)
-                local Result = {}
-    
-                for _, Value in next, {not LocalToolsOnly and Lighting, LocalPlayer.Backpack, LocalPlayer.Character ~= nil and LocalPlayer.Character} do
-                    if type(Value) == "userdata" then
-                        for _, _Value in next, Value:GetChildren() do
-                            --if _Value.Name == "TP9EliteTan" then continue end
-                            Result[#Result + 1] = _Value
-                        end
+        local Mods = Config.The_Bronx._Modifications
+
+        if Mods.InfiniteDamage then config.BaseDamage = math.huge end
+        if Mods.ModifyFireRate then config.FireRate = Mods.FireRateSpeed end
+        if Mods.InstantReload then config.ReloadTime = 0.01 end
+        if Mods.InstantEquip then config.EquipTime = 0.01 end
+        if Mods.Automatic then config.Auto = true end
+        if Mods.DisableJamming then config.JamChance = 0 end
+
+        if Mods.ModifySpreadValue then
+            local spread = Mods.SpreadPercentage / 100
+            if config.Spread then config.Spread *= spread end
+            if config.SpreadX then config.SpreadX *= spread end
+            if config.SpreadY then config.SpreadY *= spread end
+            if config.SpreadXY then config.SpreadXY *= spread end
+            if config.SpreadYX then config.SpreadYX *= spread end
+        end
+
+        if Mods.ModifyRecoilValue then
+            local recoil = Mods.RecoilPercentage / 100
+            if config.Recoil then config.Recoil *= recoil end
+        end
+
+        return config
+    end
+    return OldRequire(obj)
+end)
+
+-- Infinite Ammo & Clips
+do
+    local Ammo_Task, Mag_Task = nil, nil
+
+    local function ApplyInfiniteAmmo(Weapon)
+        if not Weapon or not Weapon:FindFirstChild("GunScript_Local") then return end
+        local env = getsenv(Weapon.GunScript_Local)
+
+        if Config.The_Bronx._Modifications.InfiniteAmmo then
+            if Ammo_Task then task.cancel(Ammo_Task) end
+            Ammo_Task = task.spawn(function()
+                while true do
+                    Heartbeat:Wait()
+                    if Weapon.Parent == LocalPlayer.Character then
+                        pcall(function() debug.setupvalue(env.Reload, 3, 9999) end)
+                    else
+                        break
                     end
                 end
-    
-                return Result
-            end)
-
-            local GetPercentage = LPH_NO_VIRTUALIZE(function(DefaultValue, NewValue)
-                NewValue = math.max(0, math.min(100, NewValue))
-
-                local newRecoil = DefaultValue * (NewValue / 100)
-            
-                return newRecoil
-            end)
-
-            local Ammo_Task = nil
-            local Mag_Task = nil
-
-            local ModWeapon = LPH_NO_VIRTUALIZE(function(Weapon)
-                local Module = Weapon:FindFirstChildOfClass("ModuleScript")
-                local OldConfig = OldWeaponValues[Weapon.Name]
-
-                if not OldConfig then
-                    return
-                end
-    
-                if Module and Module.Name == "Setting" then
-                    Module = require(Module)
-                else
-                    return
-                end
-
-                if SetInfiniteAmmo == nil then
-                    SetInfiniteAmmo = true
-                end
-
-                if SetInfiniteClips == nil then
-                    SetInfiniteClips = true
-                end
-
-                if Config.The_Bronx._Modifications.InfiniteClips then
-                    if Mag_Task and coroutine.status(Mag_Task) == "suspended" then
-                        task.cancel(Mag_Task)
-                        Mag_Task = nil
-                    end
-                    
-                    Mag_Task = task.spawn(function()
-                        while true do
-                            task.wait(0.01)
-
-                            if Config.The_Bronx._Modifications.InfiniteClips and Weapon ~= nil and Weapon.Parent ~= nil and LocalPlayer.Character ~= nil and Weapon.Parent == LocalPlayer.Character then
-                                debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 1, OldConfig.AmmoPerMag)
-                            else
-                                break
-                            end
-                        end
-                    end)
-
-                    SetInfiniteClips = false
-                end
-
-                if Config.The_Bronx._Modifications.InfiniteClips == false and SetInfiniteClips == false then
-                    debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 1, OldConfig.AmmoPerMag)
-
-                    SetInfiniteClips = true
-                end
-
-                if Config.The_Bronx._Modifications.InfiniteAmmo then
-                    if Ammo_Task and coroutine.status(Ammo_Task) == "suspended" then
-                        task.cancel(Ammo_Task)
-                        Ammo_Task = nil
-                    end
-                    
-                    Ammo_Task = task.spawn(function()
-                        while true do
-                            task.wait(0.01)
-
-                            if Config.The_Bronx._Modifications.InfiniteAmmo and Weapon ~= nil and Weapon.Parent ~= nil and LocalPlayer.Character ~= nil and Weapon.Parent == LocalPlayer.Character then
-                                debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 3, OldConfig.AmmoPerMag)
-                            else
-                                break
-                            end
-                        end
-                    end)
-
-                    SetInfiniteAmmo = false
-                end
-
-                if Config.The_Bronx._Modifications.InfiniteAmmo == false and SetInfiniteAmmo == false then
-                    debug.setupvalue(getsenv(Weapon:FindFirstChild("GunScript_Local")).Reload, 3, OldConfig.AmmoPerMag)
-
-                    SetInfiniteAmmo = true
-                end
-
-                --Module.LimitedAmmoEnabled = false
-
-                Module.FireRate = Config.The_Bronx._Modifications.ModifyFireRate and GetPercentage(OldConfig.FireRate, Config.The_Bronx._Modifications.FireRateSpeed) or OldConfig.FireRate
-                            
-                Module.ReloadTime = Config.The_Bronx._Modifications.InstantReload and 0.01 or OldConfig.ReloadTime
-                                
-                if Module.SpreadXY then
-                    Module.SpreadXY = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadXY, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadXY
-                end
-
-                if Module.SpreadYX then
-                    Module.SpreadYX = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadYX, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadYX
-                end
-
-                if Module.Spread then
-                    Module.Spread = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.Spread, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.Spread
-                end
-
-                Module.SpreadX = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadX, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadX
-                Module.SpreadY = Config.The_Bronx._Modifications.ModifySpreadValue and GetPercentage(OldConfig.SpreadY, Config.The_Bronx._Modifications.SpreadPercentage) or OldConfig.SpreadY
-
-                Module.Recoil = Config.The_Bronx._Modifications.ModifyRecoilValue and GetPercentage(OldConfig.Recoil, Config.The_Bronx._Modifications.RecoilPercentage) or OldConfig.Recoil
-
-                Module.BaseDamage = Config.The_Bronx._Modifications.InfiniteDamage and math.huge or OldConfig.BaseDamage
-
-                Module.Auto = Config.The_Bronx._Modifications.Automatic or OldConfig.Auto
-            
-                Module.JamChance = Config.The_Bronx._Modifications.DisableJamming and 0 or OldConfig.JamChance
-    
-                Module.Auto = Config.The_Bronx._Modifications.Automatic or OldConfig.Auto
-        
-                Module.EquipTime = Config.The_Bronx._Modifications.InstantEquip and 0.01 or OldConfig.EquipTime
-
-                Module.JamChance = Config.The_Bronx._Modifications.NoJam and 0 or OldConfig.JamChance
-            end)
-
-            local ModWeapons = LPH_NO_VIRTUALIZE(function()
-                for _, Weapon in next, GetAllTools(true) do
-                    if Weapon:IsA("Tool") then
-                        ModWeapon(Weapon)
-                    end
-                end
-            end)
-
-            local SetValues = LPH_NO_VIRTUALIZE(function()
-                for _, Weapon in next, GetAllTools() do
-                    if Weapon:IsA("Tool") then
-                        local Module = Weapon:FindFirstChildOfClass("ModuleScript")
-
-                        if Module and Module.Name == "Setting" then
-                            Module = require(Module)
-                        end
-
-                        if type(Module) == "table" and not OldWeaponValues[Weapon.Name] then
-                            OldWeaponValues[Weapon.Name] = {}
-
-                            local OldConfig = OldWeaponValues[Weapon.Name]
-
-                            for Index, Value in next, Module do
-                                OldConfig[Index] = Value
-                            end
-                        end
-                    end
-                end
-            end)
-
-            if not LocalPlayer.Character then LocalPlayer.CharacterAdded:Wait() end
-
-            LocalPlayer.Character.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                if not Value:IsA("Tool") then return end
-                if Value:FindFirstChild("Setting") then
-                    Config.Gun_Held = true
-                    Config.Gun_Handle = Value:WaitForChild("Handle", 1)
-
-                    if HideGunSoundsConnection then
-                        HideGunSoundsConnection:Disconnect()
-                        HideGunSoundsConnection = nil
-                    end
-
-                    HideGunSoundsConnection = Value:WaitForChild("Handle").ChildAdded:Connect(function(_Child)
-                        task.wait();
-
-                        if _Child:IsA("Sound") and Config.Hit_Sounds_Settings.HideNormalSounds then
-                            _Child:Destroy()
-                        end
-                    end)
-                end
-
-                SetValues()
-
-                ModWeapon(Value);
-            end))
-
-            LocalPlayer.Character.ChildRemoved:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                if not Value:IsA("Tool") then return end
-                if Value:FindFirstChild("Setting") then
-                    Config.Gun_Held = false
-                    Config.Gun_Handle = nil
-                end
-            end))
-
-            LocalPlayer.Backpack.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                if not Value:IsA("Tool") then return end
-                
-                SetValues()
-
-                ModWeapon(Value);
-            end))
-
-            LocalPlayer.CharacterAdded:Connect(function(Character)
-                Config.Gun_Held = false
-                Character.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                    if not Value:IsA("Tool") then return end
-                    if Value:FindFirstChild("Setting") then
-                        Config.Gun_Held = true
-                        Config.Gun_Handle = Value:WaitForChild("Handle", 1)
-                    end
-
-                    if HideGunSoundsConnection then
-                        HideGunSoundsConnection:Disconnect()
-                        HideGunSoundsConnection = nil
-                    end
-
-                    HideGunSoundsConnection = Value.Handle.ChildAdded:Connect(function(_Child)
-                        task.wait();
-
-                        if _Child:IsA("Sound") and Config.Hit_Sounds_Settings.HideNormalSounds then
-                            _Child:Destroy()
-                        end
-                    end)
-    
-                    SetValues()
-
-                    ModWeapon(Value);
-                end))
-
-                Character.ChildRemoved:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                    if not Value:IsA("Tool") then return end
-                    if Value:FindFirstChild("Setting") then
-                        Config.Gun_Held = false
-                        Config.Gun_Handle = nil
-                    end
-                end))
-    
-                LocalPlayer.Backpack.ChildAdded:Connect(LPH_NO_VIRTUALIZE(function(Value)
-                    if not Value:IsA("Tool") then return end
-                        
-                    SetValues()
-
-                    ModWeapon(Value);
-                end))
-            end)
-
-            local ConfigMetatable = getmetatable(Config.The_Bronx.Modifications)
-
-            ConfigMetatable.__index = LPH_NO_VIRTUALIZE(function(...)
-                return Config.The_Bronx._Modifications[select(2, ...)]
-            end)
-    
-            ConfigMetatable.__newindex = LPH_NO_VIRTUALIZE(function(...)
-                local Index, Value = select(2, ...)
-    
-                Config.The_Bronx._Modifications[Index] = Value; ModWeapons()
             end)
         end
+
+        if Config.The_Bronx._Modifications.InfiniteClips then
+            if Mag_Task then task.cancel(Mag_Task) end
+            Mag_Task = task.spawn(function()
+                while true do
+                    Heartbeat:Wait()
+                    if Weapon.Parent == LocalPlayer.Character then
+                        pcall(function() debug.setupvalue(env.Reload, 1, 9999) end)
+                    else
+                        break
+                    end
+                end
+            end)
+        end
+    end
+
+    LocalPlayer.Character.ChildAdded:Connect(function(Tool)
+        if Tool:IsA("Tool") and Tool:FindFirstChild("Setting") then
+            task.wait(0.2)
+            ApplyInfiniteAmmo(Tool)
+        end
+    end)
+end
     --
 
     table.sort(Config.The_Bronx.Guns)
@@ -15615,13 +15367,43 @@ if not UserInputService.TouchEnabled then
     end))
 end
 
+Library.Unload = LPH_NO_VIRTUALIZE(function()
+    -- Disconnect all connections
+    for _, conn in ipairs(Connections or {}) do
+        pcall(function() conn:Disconnect() end)
+    end
+
+    -- Remove drawings
+    pcall(function()
+        FieldOfView:Remove()
+        FieldOfViewOutline:Remove()
+        FieldOfViewFill:Remove()
+        Snapline:Remove()
+        SnaplineOutline:Remove()
+    end)
+
+    -- Remove highlight
+    pcall(function() Target_Highlight:Destroy() end)
+
+    -- Unload ESP
+    pcall(function() Esp.Unload() end)
+
+    -- Reset require hook
+    pcall(function() require = OldRequire end)
+
+    -- Final cleanup
+    print("cz.hub | Successfully unloaded")
+    getgenv().cz_loaded = false
+end)
+
+-- ==================== LOADER ====================
 Library:Notification({
     Name = "cz.hub | Loader",
     Description = "loaded in: " .. string.sub(tostring(os.clock() - LoadingTick), 1, 4).. "s",
     Duration = 10
 })
 
-Library:Init() -- put this at the end of ur script or the autoload will not work
+Library:Init()
 
 getgenv().Library = Library
-return Library  
+return Library
