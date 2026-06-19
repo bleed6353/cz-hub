@@ -30,6 +30,35 @@ LocalPlayerSection:Button({
         Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
     end
 })
+-- Local Player Modifications
+local LocalPlayerSection = MainSection:Section({Name = "Local Player Modifications", Icon = Library:GetImage("Player"), Side = 1})
+
+LocalPlayerSection:Button({
+    Name = "Local Player",
+    Tooltip = "Toggle Infinite Sleep, Hunger, Stamina, Auto Pickup & more",
+    Callback = function()
+        Config.The_Bronx.PlayerModifications.InfiniteSleep = not Config.The_Bronx.PlayerModifications.InfiniteSleep
+        Config.The_Bronx.PlayerModifications.InfiniteHunger = not Config.The_Bronx.PlayerModifications.InfiniteHunger
+        Config.The_Bronx.PlayerModifications.InfiniteStamina = not Config.The_Bronx.PlayerModifications.InfiniteStamina
+        Config.The_Bronx.PlayerModifications.InstantInteract = not Config.The_Bronx.PlayerModifications.InstantInteract
+        Config.The_Bronx.PlayerModifications.InstantRevive = not Config.The_Bronx.PlayerModifications.InstantRevive
+        Config.The_Bronx.PlayerModifications.AutoPickupCash = not Config.The_Bronx.PlayerModifications.AutoPickupCash
+        Config.The_Bronx.PlayerModifications.AutoPickupBags = not Config.The_Bronx.PlayerModifications.AutoPickupBags
+        Config.The_Bronx.PlayerModifications.DisableCameraBobbing = not Config.The_Bronx.PlayerModifications.DisableCameraBobbing
+        Config.The_Bronx.PlayerModifications.DisableBloodEffects = not Config.The_Bronx.PlayerModifications.DisableBloodEffects
+        Config.The_Bronx.PlayerModifications.BypassLockedCars = not Config.The_Bronx.PlayerModifications.BypassLockedCars
+        Config.The_Bronx.PlayerModifications.DisableCameras = not Config.The_Bronx.PlayerModifications.DisableCameras
+        Config.The_Bronx.PlayerModifications.NoJumpCooldown = not Config.The_Bronx.PlayerModifications.NoJumpCooldown
+        Config.The_Bronx.PlayerModifications.NoRentPay = not Config.The_Bronx.PlayerModifications.NoRentPay
+        Config.The_Bronx.PlayerModifications.NoFallDamage = not Config.The_Bronx.PlayerModifications.NoFallDamage
+        Config.The_Bronx.PlayerModifications.FasterRespawn = not Config.The_Bronx.PlayerModifications.FasterRespawn
+        Config.The_Bronx.PlayerModifications.NoKnockback = not Config.The_Bronx.PlayerModifications.NoKnockback
+        Config.The_Bronx.PlayerModifications.InfiniteHealth = not Config.The_Bronx.PlayerModifications.InfiniteHealth
+        Config.The_Bronx.PlayerModifications.RespawnWhereYouDied = not Config.The_Bronx.PlayerModifications.RespawnWhereYouDied
+
+        Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
+    end
+})
 
 -- Local Character Modifications
 local LocalCharacterSection = MainSection:Section({Name = "Local Character Modifications", Icon = Library:GetImage("Character"), Side = 1})
@@ -46,12 +75,6 @@ LocalCharacterSection:Button({
         Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
     end
 })
-        Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
-        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
-        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
-
-        Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
-    end
 })
 
 -- ====================== LOCAL CHARACTER MODIFICATIONS ======================
