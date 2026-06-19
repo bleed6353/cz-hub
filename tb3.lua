@@ -3456,7 +3456,7 @@ print("cz.hub | Services loaded")
             print("game TweenService =", game:GetService("TweenService"))
 print("TweenService =", TweenService)
             local NewTween = {
-                Tween = TweenService:Create(Item, Info, Goal),
+                Tween = game:GetService("TweenService"):Create(Item, Info, Goal),
                 Info = Info,
                 Goal = Goal,
                 Item = Item
