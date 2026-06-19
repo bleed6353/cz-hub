@@ -10052,7 +10052,7 @@ ImageColor3 = Color3.fromRGB(255,255,255),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Icon"]:AddToTheme({ImageColor3 = "Image"})
+                })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
 
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Inactive"].Instance,
@@ -10322,7 +10322,7 @@ ImageColor3 = Color3.fromRGB(255,255,255),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Icon"]:AddToTheme({ImageColor3 = "Image"})
+                })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
 
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Inactive"].Instance,
