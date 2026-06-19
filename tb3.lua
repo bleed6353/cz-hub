@@ -1515,35 +1515,49 @@ do -- FrameWork
             end
         end))
 
-        local Set_Speed = false; local Set_Spectate = false; RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function(Delta)
-            if Config.MiscSettings.ModifySpeed.Enabled then
-                Set_Speed = false
+       local Set_Spectate = false
+
+-- Improved WalkSpeed (Anti-Kick / Anti-TP)
+RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
+    -- === WALKSPEED ===
+    if Config.MiscSettings.ModifySpeed.Enabled then
+        local char = LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChild("Humanoid")
+            local root = char:FindFirstChild("HumanoidRootPart")
+            
+            if hum and root then
+                hum.WalkSpeed = 16  -- Fake normal speed
                 
-                LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Config.MiscSettings.ModifySpeed.Value
-            else
-                if not Set_Speed then
-                    Set_Speed = true;
-                    LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+                if hum.MoveDirection.Magnitude > 0 then
+                    local speed = Config.MiscSettings.ModifySpeed.Value
+                    root.CFrame = root.CFrame + (hum.MoveDirection * speed * 0.0167)
                 end
             end
+        end
+    else
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+        end
+    end
 
-            if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
-                Set_Spectate = false
-                local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
+    -- === SPECTATE (unchanged) ===
+    if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
+        Set_Spectate = false
+        local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
 
-                if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid") then
-                    Subject = LocalPlayer.Character.Humanoid
-                end
+        if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid") then
+            Subject = LocalPlayer.Character.Humanoid
+        end
 
-                Camera.CameraSubject = Subject
-            else
-                if not Set_Spectate then
-                    Set_Spectate = true
-
-                    Camera.CameraSubject = LocalPlayer.Character.Humanoid
-                end
-            end
-        end))
+        Camera.CameraSubject = Subject
+    else
+        if not Set_Spectate then
+            Set_Spectate = true
+            Camera.CameraSubject = LocalPlayer.Character.Humanoid
+        end
+    end
+end))
 
         RunService:BindToRenderStep("PlayerFunctions", 400, LPH_NO_VIRTUALIZE(function()
             if LocalPlayer.PlayerGui:FindFirstChild("Run") and LocalPlayer.PlayerGui.Run:FindFirstChild("StaminaBarScript", true) then
