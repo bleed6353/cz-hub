@@ -1515,9 +1515,9 @@ do -- FrameWork
             end
         end))
 
-                local Set_Spectate = false
+        local Set_Spectate = false
 
-        -- Stealth WalkSpeed (Fixed Version)
+        -- Stealth WalkSpeed for Tha Bronx 3
         RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
             if Config.MiscSettings.ModifySpeed.Enabled then
                 local char = LocalPlayer.Character
@@ -1576,16 +1576,6 @@ do -- FrameWork
                 end
             end
         end))
-                        end
-                    end
-                end
-            else
-                if LocalPlayer.Character then
-                    local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if root then
-                        local bv = root:FindFirstChild("CzSpeedVelocity")
-                        if bv then bv:Destroy() end
-                    end
                     if LocalPlayer.Character:FindFirstChild("Humanoid") then
                         LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
                     end
