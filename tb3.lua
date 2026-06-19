@@ -1695,7 +1695,11 @@ end))
         end))
     --
 
-    local OldRequire = require
+   -- ==================== IMPROVED WEAPON MODIFICATIONS ====================
+
+local OldRequire = require  -- Save original require
+
+-- Safe Require Hook
 require = LPH_NO_VIRTUALIZE(function(obj)
     if typeof(obj) == "Instance" and obj.Name == "Setting" then
         local success, config = pcall(OldRequire, obj)
@@ -15389,7 +15393,7 @@ Library.Unload = LPH_NO_VIRTUALIZE(function()
     pcall(function() Esp.Unload() end)
 
     -- Reset require hook
-    pcall(function() require = OldRequire end)
+    pcall(function() require = OldRequire or require end)
 
     -- Final cleanup
     print("cz.hub | Successfully unloaded")
