@@ -10041,7 +10041,8 @@ do -- Library
                 Items["Icon"] = Instances:Create("ImageLabel", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
-                    ImageTransparency = 0.5,
+                    ImageTransparency = 0,
+ImageColor3 = Color3.fromRGB(255,255,255),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Size = UDim2New(0, 22, 0, 22),
                     AnchorPoint = Vector2New(0, 0.5),
