@@ -1517,7 +1517,7 @@ do -- FrameWork
 
        local Set_Spectate = false
 
--- Improved WalkSpeed (Anti-Kick / Anti-TP)
+-- Safer WalkSpeed (Velocity Method - Best for Tha Bronx 3)
 RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
     -- === WALKSPEED ===
     if Config.MiscSettings.ModifySpeed.Enabled then
@@ -1527,21 +1527,29 @@ RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
             local root = char:FindFirstChild("HumanoidRootPart")
             
             if hum and root then
-                hum.WalkSpeed = 16  -- Fake normal speed
+                hum.WalkSpeed = 16   -- Fake normal speed (anti-detection)
                 
-                if hum.MoveDirection.Magnitude > 0 then
+                local moveDir = hum.MoveDirection
+                if moveDir.Magnitude > 0 then
                     local speed = Config.MiscSettings.ModifySpeed.Value
-                    root.CFrame = root.CFrame + (hum.MoveDirection * speed * 0.0167)
+                    
+                    local currentVel = root.Velocity
+                    root.Velocity = Vector3.new(
+                        moveDir.X * speed,
+                        currentVel.Y,
+                        moveDir.Z * speed
+                    )
                 end
             end
         end
     else
+        -- Normal speed when turned off
         if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
             LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
         end
     end
 
-    -- === SPECTATE (unchanged) ===
+    -- === SPECTATE PLAYER (DO NOT TOUCH) ===
     if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
         Set_Spectate = false
         local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
@@ -1553,6 +1561,11 @@ RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
         Camera.CameraSubject = Subject
     else
         if not Set_Spectate then
+            Set_Spectate = true
+            Camera.CameraSubject = LocalPlayer.Character.Humanoid
+        end
+    end
+end))
             Set_Spectate = true
             Camera.CameraSubject = LocalPlayer.Character.Humanoid
         end
