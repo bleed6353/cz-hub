@@ -75,34 +75,36 @@ local Config = {
         Pop = "rbxassetid://198598793",
         Bruh = "rbxassetid://4275842574",
         Bamboo = "rbxassetid://3769434519",
-        Steve = "rbxassetid://4965083997"
-    };
+        Steve = "rbxassetid://4965083997";
+};
 
-    Hit_Sounds_Settings = {
-        Enabled = false;
-        Volume = 5;
-        Selected = "Neverlose";
-        HideNormalSounds = false;
-    };
+   Hit_Sounds_Settings = {
+    Enabled = false;
+    Volume = 5;
+    Selected = "Neverlose";
+    HideNormalSounds = false;
+};
 
-    ["WorldVisuals"] = {
-        ["SaturationEnabled"] = false;
-        ["Saturation_Value"] = 1;
+WorldVisuals = {
+    SaturationEnabled = false;
+    Saturation_Value = 1;
 
-        ["StretchEnabled"] = false;
-        ["StretchValue"] = 0.7;
+    StretchEnabled = false;
+    StretchValue = 0.7;
 
-        ["FogColorEnabled"] = false;
-        ["FogColor"] = Color3.new(1,1,1);
+    FogColorEnabled = false;
+    FogColor = Color3.new(1,1,1);
 
-        ["AmbientEnabled"] = false;
-        ["AmbientColor"] = Color3.new(1,1,1);
+    AmbientEnabled = false;
+    AmbientColor = Color3.new(1,1,1);
 
-        ["FieldOfViewEnabled"] = false;
-        ["FieldOfViewValue"] = 70;
+    FieldOfViewEnabled = false;
+    FieldOfViewValue = 70;
 
-        ["Fullbright"] = false;
-    };
+    Fullbright = false;
+};
+
+Gun_Held = false;
 
     ["Gun_Held"] = false;
 
