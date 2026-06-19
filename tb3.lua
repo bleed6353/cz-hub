@@ -97,7 +97,7 @@ local Config = {
 
         ["AmbientEnabled"] = false;
         ["AmbientColor"] = Color3.new(1,1,1);
-print("CHECKPOINT 3")
+
         ["FieldOfViewEnabled"] = false;
         ["FieldOfViewValue"] = 70;
 
