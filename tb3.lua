@@ -2650,14 +2650,11 @@ end
                             local Elapsed = tick() - Start
                             local Alpha = math.clamp(Elapsed, 0, 1)
 
-                            local Value = Esp:Lerp(
-                                Data.Info.Health, 
-                                Value, 
-                                TweenService:GetValue(
-                                    Alpha, 
-                                    Enum.EasingStyle[MiscOptions.Healthbar_EasingStyle], 
-                                    Enum.EasingDirection[MiscOptions.Healthbar_EasingDirection]
-                                )
+                            game:GetService("TweenService"):GetValue(
+    Alpha,
+    Enum.EasingStyle[MiscOptions.Healthbar_EasingStyle],
+    Enum.EasingDirection[MiscOptions.Healthbar_EasingDirection]
+)
                             )   
 
                             Items.HealthbarText.Text = math.floor(Value)
