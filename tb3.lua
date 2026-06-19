@@ -85,7 +85,7 @@ local Config = {
     HideNormalSounds = false;
 };
 
-WorldVisuals = {
+["WorldVisuals"] = {
     SaturationEnabled = false;
     Saturation_Value = 1;
 
@@ -104,7 +104,7 @@ WorldVisuals = {
     Fullbright = false;
 };
 
-Gun_Held = false;
+
 
     ["Gun_Held"] = false;
 
