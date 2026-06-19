@@ -1,4 +1,3 @@
-lualocal base64 = loadstring(game:HttpGet("https://raw.githubusercontent.com/iskolbin/lbase64/master/base64.lua"))()
 -- Local Player Modifications
 local LocalPlayerSection = MainSection:Section({Name = "Local Player Modifications", Icon = Library:GetImage("Player"), Side = 1})
 
@@ -38,18 +37,6 @@ LocalCharacterSection:Button({
     Callback = function()
         Config.MiscSettings.ModifySpeed.Enabled = not Config.MiscSettings.ModifySpeed.Enabled
         Config.MiscSettings.ModifyJump.Enabled = not Config.MiscSettings.ModifyJump.Enabled
-        Config.MiscSettings.ClickTeleport_Enabled = not Config.MiscSettings.ClickTeleport_Enabled
-        Config.The_Bronx.PlayerModifications.NoClip = not Config.The_Bronx.PlayerModifications.NoClip
-
-        Library:Notify("cz_hub.gg", "All Local Character cheats toggled!", 3)
-    end
-})
-        Config.The_Bronx.PlayerModifications.NoFallDamage = not Config.The_Bronx.PlayerModifications.NoFallDamage
-        Config.The_Bronx.PlayerModifications.FasterRespawn = not Config.The_Bronx.PlayerModifications.FasterRespawn
-        Config.The_Bronx.PlayerModifications.NoKnockback = not Config.The_Bronx.PlayerModifications.NoKnockback
-        Config.The_Bronx.PlayerModifications.InfiniteHealth = not Config.The_Bronx.PlayerModifications.InfiniteHealth
-        Config.The_Bronx.PlayerModifications.RespawnWhereYouDied = not Config.The_Bronx.PlayerModifications.RespawnWhereYouDied
-
         Library:Notify("cz_hub.gg", "All Local Player cheats toggled!", 3)
     end
 })
