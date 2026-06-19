@@ -1,4 +1,4 @@
-
+    if not LPH_OBFUSCATED then
     local function identity(x) return x end
     LPH_ENCNUM = identity; LPH_NUMENC = identity
     LPH_ENCSTR = identity; LPH_STRENC = identity
