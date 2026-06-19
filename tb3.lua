@@ -8,7 +8,7 @@ if not LPH_OBFUSCATED then
     LPH_NO_UPVALUES = identity
     LPH_CRASH = function() end
 end
-    end
+
     LRM_IsUserPremium = false
     LRM_LinkedDiscordID = "1096603799159832636"
     LRM_ScriptName = "cz"
