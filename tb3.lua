@@ -1,4 +1,5 @@
 print("TB3 VERSION TEST 123")
+print("CHECKPOINT 1")
 if not LPH_OBFUSCATED then
     local function identity(x) return x end
     LPH_ENCNUM = identity; LPH_NUMENC = identity
@@ -44,7 +45,7 @@ local Services = setmetatable({}, {
         return (cloneref ~= nil) and cloneref(game:GetService(service)) or game:GetService(service)
     end)
 })
-
+print("CHECKPOINT 2")
 for Index, Value in getconnections(gethui().ChildRemoved) do
     Value:Disable()
 end
@@ -96,7 +97,7 @@ local Config = {
 
         ["AmbientEnabled"] = false;
         ["AmbientColor"] = Color3.new(1,1,1);
-
+print("CHECKPOINT 3")
         ["FieldOfViewEnabled"] = false;
         ["FieldOfViewValue"] = 70;
 
@@ -1786,7 +1787,7 @@ local Options, MiscOptions do
     local RunService = cloneref(game:GetService("RunService"))
     local HttpService = cloneref(game:GetService("HttpService"))
     local Players = cloneref(game:GetService("Players"))
-    local TweenService = cloneref(game:GetService("TweenService"))
+    local TweenService = game:GetService("TweenService")
 
     local vec2 = Vector2.new
     local vec3 = Vector3.new
@@ -3450,7 +3451,7 @@ print("cz.hub | Services loaded")
         Tween.Create = LPH_NO_VIRTUALIZE(function(self, Item, Info, Goal, IsRawItem)
             Item = IsRawItem and Item or Item.Instance
             Info = Info or TweenInfo.new(Library.Tween.Time, Library.Tween.Style, Library.Tween.Direction)
-
+            print("TweenService =", TweenService)
             local NewTween = {
                 Tween = TweenService:Create(Item, Info, Goal),
                 Info = Info,
