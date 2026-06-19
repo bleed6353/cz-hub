@@ -12067,7 +12067,8 @@ do
     local Chat_API = {}
 
     Chat_API.URL = "https://yellow-band-8a75.oblockjoycesohiorizz.workers.dev/"
-
+    print("Services =", Services)
+print("Services.HttpService =", Services and Services.HttpService)
     local HttpService = Services.HttpService
 
     function Chat_API.SendMessage(UserId, Message)
