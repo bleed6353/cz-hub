@@ -1515,11 +1515,10 @@ do -- FrameWork
             end
         end))
 
-                       local Set_Spectate = false
+                               local Set_Spectate = false
 
-        -- === IMPROVED STEALTH WALKSPEED FOR THA BRONX 3 ===
+        -- === STEALTH WALKSPEED FOR THA BRONX 3 ===
         RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
-            -- WalkSpeed Logic
             if Config.MiscSettings.ModifySpeed.Enabled then
                 local char = LocalPlayer.Character
                 if char then
@@ -1527,7 +1526,7 @@ do -- FrameWork
                     local root = char:FindFirstChild("HumanoidRootPart")
                     
                     if hum and root then
-                        hum.WalkSpeed = 16  -- Fake normal speed (anti-detection)
+                        hum.WalkSpeed = 16  -- Keep real walkspeed normal
                         
                         local moveDir = hum.MoveDirection
                         if moveDir.Magnitude > 0 then
@@ -1549,7 +1548,6 @@ do -- FrameWork
                     end
                 end
             else
-                -- Normal speed when disabled
                 if LocalPlayer.Character then
                     local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
                     if root then
@@ -1563,28 +1561,7 @@ do -- FrameWork
                 end
             end
 
-            -- Spectate Logic (unchanged)
-            if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
-                Set_Spectate = false
-                local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
-
-                if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(L
-                        end
-                    end
-                end
-            else
-                if LocalPlayer.Character then
-                    local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if root then
-                        local bv = root:FindFirstChild("CzSpeedVelocity")
-                        if bv then bv:Destroy() end
-                    end
-                    if LocalPlayer.Character:FindFirstChild("Humanoid") then
-                        LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
-                    end
-                end
-            end
-
+            -- Spectate Player
             if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
                 Set_Spectate = false
                 local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
@@ -1601,12 +1578,6 @@ do -- FrameWork
                 end
             end
         end))
-
-                    Camera.CameraSubject = LocalPlayer.Character.Humanoid
-                end
-            end
-        end))
-
         RunService:BindToRenderStep("PlayerFunctions", 400, LPH_NO_VIRTUALIZE(function()
             if LocalPlayer.PlayerGui:FindFirstChild("Run") and LocalPlayer.PlayerGui.Run:FindFirstChild("StaminaBarScript", true) then
                 LocalPlayer.PlayerGui.Run:FindFirstChild("StaminaBarScript", true).Disabled = Config.The_Bronx.PlayerModifications.InfiniteStamina
