@@ -2012,11 +2012,11 @@ local Options, MiscOptions do
         end
 
         function Esp:Tween(Object, Properties, Info)
-            local tween = TweenService:Create(Object, Info, Properties)
-            tween:Play()
-            
-            return tween
-        end
+    local tween = game:GetService("TweenService"):Create(Object, Info, Properties)
+    tween:Play()
+
+    return tween
+end
 
         function Esp.CreateObject( player, typechar ) -- IMPORTANT!
             local Data = { 
