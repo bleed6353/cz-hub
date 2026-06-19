@@ -1515,9 +1515,9 @@ do -- FrameWork
             end
         end))
 
-        local Set_Spectate = false
+                local Set_Spectate = false
 
-        -- Stealth WalkSpeed for Tha Bronx 3
+        -- Stealth WalkSpeed (Fixed Version)
         RunService:BindToRenderStep("WalkSpeed", 400, LPH_NO_VIRTUALIZE(function()
             if Config.MiscSettings.ModifySpeed.Enabled then
                 local char = LocalPlayer.Character
@@ -1544,6 +1544,38 @@ do -- FrameWork
                             if bv then
                                 bv.Velocity = Vector3.new(moveDir.X * speed, 0, moveDir.Z * speed)
                             end
+                        end
+                    end
+                end
+            else
+                if LocalPlayer.Character then
+                    local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if root then
+                        local bv = root:FindFirstChild("CzSpeedVelocity")
+                        if bv then bv:Destroy() end
+                    end
+                    if LocalPlayer.Character:FindFirstChild("Humanoid") then
+                        LocalPlayer.Character.Humanoid.WalkSpeed = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 16 or 7
+                    end
+                end
+            end
+
+            if Config.The_Bronx.PlayerUtilities.SpectatePlayer then
+                Set_Spectate = false
+                local Subject = Players:FindFirstChild(Library.Selected_Player.Name) and Players:FindFirstChild(Library.Selected_Player.Name).Character and Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid")
+
+                if not Players:FindFirstChild(Library.Selected_Player.Name) or not Players:FindFirstChild(Library.Selected_Player.Name).Character or not Players:FindFirstChild(Library.Selected_Player.Name).Character:FindFirstChild("Humanoid") then
+                    Subject = LocalPlayer.Character.Humanoid
+                end
+
+                Camera.CameraSubject = Subject
+            else
+                if not Set_Spectate then
+                    Set_Spectate = true
+                    Camera.CameraSubject = LocalPlayer.Character.Humanoid
+                end
+            end
+        end))
                         end
                     end
                 end
