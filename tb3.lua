@@ -53,7 +53,7 @@ if LPH_OBFUSCATED == nil then
     end
     LRM_IsUserPremium = false
     LRM_LinkedDiscordID = "1096603799159832636"
-    LRM_ScriptName = "cz hub"
+    LRM_ScriptName = "cz_hub"
     LRM_TotalExecutions = 0
     LRM_SecondsLeft = math.huge
     LRM_UserNote = "Developer";
@@ -93,7 +93,7 @@ end
 
 local Config = {
     ["Gun_Handle"] = nil;
-    ["cz hub_Users"] = {};
+    ["cz_hub_Users"] = {};
 
     Tracers = {
         Enabled = false;
@@ -356,7 +356,7 @@ local FireServer, InvokeServer, UnreliableFireServer = Instance.new("RemoteEvent
 
 if isfunctionhooked then
     if isfunctionhooked(FireServer) or isfunctionhooked(UnreliableFireServer) or isfunctionhooked(InvokeServer) and LPH_OBFUSCATED then
-        return Services.Players.LocalPlayer:Kick("cz hub.gg | Security : You are running another script, please disable it and execute again")
+        return Services.Players.LocalPlayer:Kick("cz_hub.gg | Security : You are running another script, please disable it and execute again")
     end
 end
 
@@ -389,14 +389,14 @@ do -- FrameWork
         frame.Parent = Black_UI
     
         local textLabel = Instance.new("TextLabel")
-        textLabel.Name = "\nhideuicz hub"
+        textLabel.Name = "\nhideuicz_hub"
         textLabel.Size = UDim2.new(0, 400, 0, 100)
         textLabel.Font = Enum.Font.SourceSansBold
         textLabel.RichText = true
         local accent = Library.Theme.Accent
         local accentString = string.format("rgb(%d,%d,%d)", accent.R * 255, accent.G * 255, accent.B * 255)
 
-        textLabel.Text = '<font color="' .. accentString .. '">cz hub</font>\n' .. Title
+        textLabel.Text = '<font color="' .. accentString .. '">cz_hub</font>\n' .. Title
         textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         textLabel.BackgroundTransparency = 1
         textLabel.TextSize = 36
@@ -416,7 +416,7 @@ do -- FrameWork
             local accent = Library.Theme.Accent
             local accentString = string.format("rgb(%d,%d,%d)", accent.R * 255, accent.G * 255, accent.B * 255)
 
-            Black_UI["\nhideuicz hub"].Text = '<font color="' .. accentString .. '">cz hub</font>\n' .. Text
+            Black_UI["\nhideuicz_hub"].Text = '<font color="' .. accentString .. '">cz_hub</font>\n' .. Text
         end
     end)
 
@@ -3495,10 +3495,10 @@ do -- Library
         },
 
         Folders = {
-            Directory = "cz hub",
-            Configs = "cz hub/TheBronx3Configs",
-            Assets = "cz hub/Assets",
-            Themes = "cz hub/Themes"
+            Directory = "cz_hub",
+            Configs = "cz_hub/TheBronx3Configs",
+            Assets = "cz_hub/Assets",
+            Themes = "cz_hub/Themes"
         },
 
         Images = { -- you're welcome to reupload the images and replace it with your own links
@@ -3506,52 +3506,52 @@ do -- Library
             ["Value"] = { "Value.png", "https://github.com/sametexe001/images/blob/main/value.png?raw=true" },
             ["Hue"] = { "Hue.png", "https://github.com/sametexe001/images/blob/main/horizontalhue.png?raw=true" },
             ["Checkers"] = { "Checkers.png", "https://github.com/sametexe001/images/blob/main/checkers.png?raw=true" },
-            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Radar.png?raw=true"},
-            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/DiagonalLine.png?raw=true"},
-            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/AdsClick.png?raw=true"},
-            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Forward.png?raw=true"},
-            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Skull.png?raw=true"},
-            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/MultipleCogs.png?raw=true"},
-            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Tune.png?raw=true"},
-            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Wrench.png?raw=true"},
-            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/IdCard.png?raw=true"},
-            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/AccountCircle.png?raw=true"},
-            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/GroupSearch.png?raw=true"},
-            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/USDChip.png?raw=true"},
-            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Wrist.png?raw=true"},
-            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/PlayerUtilties.png?raw=true"},
-            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/CreditCard.png?raw=true"},
-            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/JumpToElement.png?raw=true"},
-            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Apartment.png?raw=true"},
-            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/MoneySymbol.png?raw=true"},
-            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/TravelExplore.png?raw=true"},
-            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Scrambler.png?raw=true"},
-            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Info.png?raw=true"},
-            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/CarInfo.png?raw=true"},
-            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/AutoManifacturing.png?raw=true"},
-            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/MoneyBag.png?raw=true"},
-            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Bolt.png?raw=true"},
-            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/RetroController.png?raw=true"},
-            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/NewController30px.png?raw=true"},
-            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Home.png?raw=true"},
-            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Lock.png?raw=true"},
-            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/EncryptedOff.png?raw=true"},
-            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/DeployedCodeAccount.png?raw=true"},
-            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/IdentityPlatform.png?raw=true"},
-            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/DataLossPrevention.png?raw=true"},
-            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/CarGear.png?raw=true"},
-            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Groups.png?raw=true"},
-            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/GlobePublic.png?raw=true"},
-            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/LightBulb.png?raw=true"},
-            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Cloud.png?raw=true"},
-            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Contrast.png?raw=true"},
-            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/TrailShort.png?raw=true"},
-            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/EyeTracking.png?raw=true"},
-            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/ScreenRotation.png?raw=true"},
-            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/QueryStats.png?raw=true"},
-            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/CellTower.png?raw=true"},
-            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Bomb.png?raw=true"},
-            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/Servers.png?raw=true"},
+            ["Radar"] = {"Radar.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Radar.png?raw=true"},
+            ["DiagonalLine"] = {"DiagonalLine.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/DiagonalLine.png?raw=true"},
+            ["AdsClick"] = {"AdsClick.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/AdsClick.png?raw=true"},
+            ["Forward"] = {"Forward.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Forward.png?raw=true"},
+            ["Skull"] = {"Skull.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Skull.png?raw=true"},
+            ["MultipleCogs"] = {"MultipleCogs.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/MultipleCogs.png?raw=true"},
+            ["Tune"] = {"Tune.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Tune.png?raw=true"},
+            ["Wrench"] = {"Wrench.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Wrench.png?raw=true"},
+            ["IdCard"] = {"IdCard.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/IdCard.png?raw=true"},
+            ["AccountCircle"] = {"AccountCircle.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/AccountCircle.png?raw=true"},
+            ["GroupSearch"] = {"GroupSearch.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/GroupSearch.png?raw=true"},
+            ["USDChip"] = {"USDChip.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/USDChip.png?raw=true"},
+            ["Wrist"] = {"Wrist.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Wrist.png?raw=true"},
+            ["PlayerUtilties"] = {"PlayerUtilties.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/PlayerUtilties.png?raw=true"},
+            ["CreditCard"] = {"CreditCard.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/CreditCard.png?raw=true"},
+            ["JumpToElement"] = {"JumpToElement.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/JumpToElement.png?raw=true"},
+            ["Apartment"] = {"Apartment.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Apartment.png?raw=true"},
+            ["MoneySymbol"] = {"MoneySymbol.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/MoneySymbol.png?raw=true"},
+            ["TravelExplore"] = {"TravelExplore.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/TravelExplore.png?raw=true"},
+            ["Scrambler"] = {"Scrambler.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Scrambler.png?raw=true"},
+            ["Info"] = {"Info.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Info.png?raw=true"},
+            ["CarInfo"] = {"CarInfo.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/CarInfo.png?raw=true"},
+            ["AutoManifacturing"] = {"AutoManifacturing.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/AutoManifacturing.png?raw=true"},
+            ["MoneyBag"] = {"MoneyBag.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/MoneyBag.png?raw=true"},
+            ["Bolt"] = {"Bolt.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Bolt.png?raw=true"},
+            ["RetroController"] = {"RetroController.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/RetroController.png?raw=true"},
+            ["NewController30px"] = {"NewController30px.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/NewController30px.png?raw=true"},
+            ["Home"] = {"Home.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Home.png?raw=true"},
+            ["Lock"] = {"Lock.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Lock.png?raw=true"},
+            ["EncryptedOff"] = {"EncryptedOff.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/EncryptedOff.png?raw=true"},
+            ["DeployedCodeAccount"] = {"DeployedCodeAccount.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/DeployedCodeAccount.png?raw=true"},
+            ["IdentityPlatform"] = {"IdentityPlatform.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/IdentityPlatform.png?raw=true"},
+            ["DataLossPrevention"] = {"DataLossPrevention.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/DataLossPrevention.png?raw=true"},
+            ["CarGear"] = {"CarGear.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/CarGear.png?raw=true"},
+            ["Groups"] = {"Groups.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Groups.png?raw=true"},
+            ["GlobePublic"] = {"GlobePublic.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/GlobePublic.png?raw=true"},
+            ["LightBulb"] = {"LightBulb.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/LightBulb.png?raw=true"},
+            ["Cloud"] = {"Cloud.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Cloud.png?raw=true"},
+            ["Contrast"] = {"Contrast.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Contrast.png?raw=true"},
+            ["TrailShort"] = {"TrailShort.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/TrailShort.png?raw=true"},
+            ["EyeTracking"] = {"EyeTracking.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/EyeTracking.png?raw=true"},
+            ["ScreenRotation"] = {"ScreenRotation.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/ScreenRotation.png?raw=true"},
+            ["QueryStats"] = {"QueryStats.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/QueryStats.png?raw=true"},
+            ["CellTower"] = {"CellTower.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/CellTower.png?raw=true"},
+            ["Bomb"] = {"Bomb.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Bomb.png?raw=true"},
+            ["Servers"] = {"Servers.png", "https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/Servers.png?raw=true"},
         },
 
         Friendly_Players = {}, Priority_Players = {}, Selected_Player = nil,
@@ -4368,7 +4368,7 @@ do -- Library
 
             if not Success then
                 Library:Notification({
-                    Name = "cz hub.gg | Error",
+                    Name = "cz_hub.gg | Error",
                     Description = "Error caught, please report it in the discord.\n"..Result,
                     Duration = 10,
                 })
@@ -4547,14 +4547,14 @@ do -- Library
 
         if Theme == "Accent" and Window then
             Window:SetText(string.format(
-                '<font color="rgb(255,255,255)">cz hub.</font><font color="rgb(%d,%d,%d)">gg</font> | %s',
+                '<font color="rgb(255,255,255)">cz_hub.</font><font color="rgb(%d,%d,%d)">gg</font> | %s',
                 Color.R*255,
                 Color.G*255,
                 Color.B*255,
                 Game_Name_MarketPlaceService
             ))
 
-            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz hub.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Color.R*255,Color.G*255,Color.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
+            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz_hub.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Color.R*255,Color.G*255,Color.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
         end
 
         for _, Item in self.ThemeItems do
@@ -12288,7 +12288,7 @@ end
 -- Example
 do
     Window = Library:Window({
-        Name = '<font color="rgb(255,255,255)">cz hub.</font><font color="rgb(236,23,23)">gg</font> | '..Game_Name_MarketPlaceService,
+        Name = '<font color="rgb(255,255,255)">cz_hub.</font><font color="rgb(236,23,23)">gg</font> | '..Game_Name_MarketPlaceService,
         Version = "v1.0.0",
         Logo = "135215559087473",
         FadeSpeed = 0.25,
@@ -12341,8 +12341,8 @@ do
         ["1096603799159832636"] = ' - <font color="#EC1717">Owner</font>'
     }
     
-    if not isfolder("cz hub/Assets/Profiles") then
-        makefolder("cz hub/Assets/Profiles")
+    if not isfolder("cz_hub/Assets/Profiles") then
+        makefolder("cz_hub/Assets/Profiles")
     end
 
     function Chat_API.GetDiscordProfile(Discord_ID)
@@ -12356,11 +12356,11 @@ do
         local avatar = Cached_Data[Discord_ID].avatar
         local ext = avatar.is_animated and ".gif" or ".png"
 
-        if not isfile("cz hub/Assets/Profiles/"..Discord_ID..ext) then
+        if not isfile("cz_hub/Assets/Profiles/"..Discord_ID..ext) then
             if not avatar.link then
-                writefile("cz hub/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/cz hubSoftworks/Assets/refs/heads/main/download.png'))
+                writefile("cz_hub/Assets/Profiles/"..Discord_ID..ext, game:HttpGet('https://raw.githubusercontent.com/cz_hubSoftworks/Assets/refs/heads/main/download.png'))
             else
-                writefile("cz hub/Assets/Profiles/"..Discord_ID..ext, game:HttpGet(avatar.link))
+                writefile("cz_hub/Assets/Profiles/"..Discord_ID..ext, game:HttpGet(avatar.link))
             end
         end
 
@@ -12370,7 +12370,7 @@ do
             Name..=Special_DiscordIDS[Discord_ID]
         end
 
-        return getcustomasset("cz hub/Assets/Profiles/"..Discord_ID..ext), Name
+        return getcustomasset("cz_hub/Assets/Profiles/"..Discord_ID..ext), Name
     end
 
     task.spawn(function()
@@ -12464,22 +12464,22 @@ do
                         pcall(function()
                             local decoded_user = base64.decode(string.reverse(v.username))
 
-                            if not Config.cz hub_Users[decoded_user] then
-                                Config.cz hub_Users[decoded_user] = i
+                            if not Config.cz_hub_Users[decoded_user] then
+                                Config.cz_hub_Users[decoded_user] = i
                             end
                         end)
                     end
 
                     local toRemove = {}
 
-                    for username, id in Config.cz hub_Users do
+                    for username, id in Config.cz_hub_Users do
                         if not Messages.users.stored[id] then
                             table.insert(toRemove, username)
                         end
                     end
 
                     for _, username in toRemove do
-                        Config.cz hub_Users[username] = nil
+                        Config.cz_hub_Users[username] = nil
                     end
 
                     for _, v in pairs(Messages.messages) do
@@ -12567,7 +12567,7 @@ do
 
     task.spawn(LPH_NO_VIRTUALIZE(function()
         while task.wait(1) do
-            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz hub.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Library.Theme.Accent.R*255,Library.Theme.Accent.G*255,Library.Theme.Accent.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
+            Watermark:SetText(string.format('<font color="rgb(255,255,255)">cz_hub.</font><font color="rgb(%d,%d,%d)">gg</font> - %s - %s',Library.Theme.Accent.R*255,Library.Theme.Accent.G*255,Library.Theme.Accent.B*255, Game_Name_MarketPlaceService, os.date("%b. %d %Y, %X")))
         end
     end))
 
@@ -14307,7 +14307,7 @@ do
                     ManualFarm_Section:Button({Name = "Clean All Filthy Money", Callback = function()
                         if LocalPlayer.stored.FilthyStack.Value == 0 then 
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "You don't have any filthy cash!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14322,7 +14322,7 @@ do
                         
                         if not Cleaner then
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Couldn't find a good cleaner!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14453,7 +14453,7 @@ do
                         if Check then
                             Config:DeleteHiddenScreen()
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Couldn't find the items! Please make sure you have more than $5,000",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14536,7 +14536,7 @@ do
                     local Cooldown = false; Vuln_Section:Button({Name = "Duplicate Current Item", Tooltip = "You need to hold the gun you're trying to dupe.\nIf it doesn't work, retry.", Callback = function()
                         if Cooldown then
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Cooldown! Please wait.",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14553,7 +14553,7 @@ do
 
                         if not Tool then
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Couldn't find your tool! Please make sure you're holding one.",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14611,7 +14611,7 @@ do
 
                         if not Tool and State then
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Couldn't find your tool! Please make sure you're holding one.",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -14753,7 +14753,7 @@ do
 
                         if not FORCED then
                             Library:Notification({
-                                Name = "cz hub.gg | Success",
+                                Name = "cz_hub.gg | Success",
                                 Description = string.format("Successfully took %s out of your safe!", ToolName),
                                 Duration = 5,
                                 Icon = "116339777575852",
@@ -14761,7 +14761,7 @@ do
                             })
                         else
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = string.format("Couldn't get %s from your safe!", ToolName),
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14808,7 +14808,7 @@ do
 
                         if not FORCED then
                             Library:Notification({
-                                Name = "cz hub.gg | Success",
+                                Name = "cz_hub.gg | Success",
                                 Description = string.format("Successfully safed your %s!", Tool),
                                 Duration = 5,
                                 Icon = "116339777575852",
@@ -14816,7 +14816,7 @@ do
                             })
                         else
                             Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = string.format("Couldn't safe your %s!", Tool),
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -14857,7 +14857,7 @@ do
                         local Prompt = Workspace:FindFirstChild("GUNS")[self]:FindFirstChildWhichIsA("ProximityPrompt",true);
                         if (Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("GamepassID", true) and not MarketplaceService:UserOwnsGamePassAsync(LocalPlayer.UserId, Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("GamepassID",true).Value)) then 
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "You do not own this gamepass!",
                                 Duration = 7.5,
                                 Icon = "97118059177470",
@@ -14868,7 +14868,7 @@ do
                         local Part = Prompt.Parent:IsA("Part") and Prompt.Parent.CFrame or Prompt.Parent:IsA("MeshPart") and Prompt.Parent.CFrame or Prompt.Parent:IsA("UnionOperation") and Prompt.Parent.CFrame;
                         if LocalPlayer.stored.Money.Value < Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("Price",true).Value then
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = string.format("You are $%s short!", Workspace:FindFirstChild("GUNS")[self]:FindFirstChild("Price",true).Value - LocalPlayer.stored.Money.Value),
                                 Duration = 7.5,
                                 Icon = "97118059177470",
@@ -14896,7 +14896,7 @@ do
                         repeat task.wait(); fireproximityprompt(Prompt); until ItemReceieved == true;
                         
                         Library:Notification({
-                            Name = "cz hub.gg | Success",
+                            Name = "cz_hub.gg | Success",
                             Description = "Successfully purchased "..Library.Flags["TheBronx3/SelectItemToPurchase"],
                             Duration = 5,
                             Icon = "116339777575852",
@@ -15000,7 +15000,7 @@ do
                         if not Library.Flags["TheBronx3/VehicleSpawner/SelectVehicle"] then return end
                         if not replicatesignal then
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "Your executor doesnt support 'replicatesignal' , get a better executor!",
                                 Duration = 10,
                                 Icon = "97118059177470",
@@ -15021,7 +15021,7 @@ do
 
                         if LocalPlayer.PlayerGui.GunGui.Holder.Buy.Text:lower() == "buy" then
                             return Library:Notification({
-                                Name = "cz hub.gg | Error!",
+                                Name = "cz_hub.gg | Error!",
                                 Description = "You don't own this car!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -15457,7 +15457,7 @@ do
                 
                         if Server.id == game.JobId then
                             Library:Notification({
-                                Name = "cz hub.gg | Servers",
+                                Name = "cz_hub.gg | Servers",
                                 Description = "You are currently in the smallest server!",
                                 Duration = 5,
                                 Icon = "97118059177470",
@@ -15615,7 +15615,7 @@ if not UserInputService.TouchEnabled then
 end
 
 Library:Notification({
-    Name = "cz hub.gg | Loader",
+    Name = "cz_hub.gg | Loader",
     Description = "loaded in: " .. string.sub(tostring(os.clock() - LoadingTick), 1, 4).. "s",
     Duration = 10
 })
